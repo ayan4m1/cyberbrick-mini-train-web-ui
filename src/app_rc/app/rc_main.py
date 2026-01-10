@@ -176,10 +176,16 @@ async def slave_init():
 
     from control import BBL_Controller
     from parser import DataParser
+    from microdot import Microdot
     gc.collect()
 
     data_parser = DataParser()
     bbl_controller = BBL_Controller()
+    http_server = Microdot()
+
+    @http_server.route('/')
+    async def index(request):
+        return 'Hello, world!'
 
     async def period_task():
         global conf_update_flag
@@ -247,6 +253,8 @@ async def slave_init():
                 logger.error(f"[MAIN]SIM_TASK: {e}")
                 sys.exit()
             await uasyncio.sleep(0.02)
+
+    http_server.run()
 
     await uasyncio.gather(
         control_task(),
