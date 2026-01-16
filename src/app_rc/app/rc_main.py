@@ -21,7 +21,8 @@ if '.frozen' in sys.path:
 
 conf_update_flag = True  # Flag to indicate configuration update is needed
 setting = None           # Parsed configuration settings
-
+wifi_ssid = 'foo'        # WiFi station ID
+wifi_psk = 'changeme'    # WiFi pre-shared key
 
 async def _reload_configuration(parser, logger):
     """Helper function to reload configuration from file"""
@@ -174,10 +175,19 @@ async def slave_init():
     if rc_module.rc_slave_init() is False:
         return
 
+    import network
     from control import BBL_Controller
     from parser import DataParser
     from microdot import Microdot
     gc.collect()
+
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(wifi_ssid, wifi_psk)
+
+    while not wlan.isconnected():
+        await uasyncio.sleep(60)
+        wlan.connect(wifi_ssid, wifi_psk)
 
     data_parser = DataParser()
     bbl_controller = BBL_Controller()
