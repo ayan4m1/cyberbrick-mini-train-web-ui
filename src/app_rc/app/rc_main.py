@@ -22,7 +22,7 @@ if '.frozen' in sys.path:
 conf_update_flag = True  # Flag to indicate configuration update is needed
 setting = None           # Parsed configuration settings
 wifi_ssid = 'qux'        # WiFi station ID
-wifi_psk = 'wi9NNYara'    # WiFi pre-shared key
+wifi_psk = 'hamsalad'    # WiFi pre-shared key
 
 async def _reload_configuration(parser, logger):
     """Helper function to reload configuration from file"""
