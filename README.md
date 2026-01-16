@@ -32,6 +32,8 @@ Enter the RC code directory:
 
 In the app_rc folder, you can see the startup and control code used to implement RC applications. To achieve RC application functionality, you can upload the directory contents to the onboard file system directory of Multi-Function Core Board.
 
+Set your WiFi credentials in rc_main.py. Then, once you see the device on the network, you can access it over HTTP at its IP address.
+
 It is recommended to use the mpy_cross tool to convert [control.py](src/app_rc/app/control.py) and [parser.py](src/app_rc/app/parser.py) into bytecode in (.mpy) format, with the same name as the (.py) program. When encountering the problem of insufficient RAM space during program execution.
 
     $ mpy-cross .\app\control.py
