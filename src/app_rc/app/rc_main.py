@@ -21,8 +21,8 @@ if '.frozen' in sys.path:
 
 conf_update_flag = True  # Flag to indicate configuration update is needed
 setting = None           # Parsed configuration settings
-wifi_ssid = 'foo'        # WiFi station ID
-wifi_psk = 'changeme'    # WiFi pre-shared key
+wifi_ssid = 'qux'        # WiFi station ID
+wifi_psk = 'wi9NNYara'    # WiFi pre-shared key
 
 async def _reload_configuration(parser, logger):
     """Helper function to reload configuration from file"""
@@ -167,27 +167,31 @@ async def master_init():
 
 
 async def slave_init():
+    global wifi_ssid, wifi_psk
+
     import rc_module
 
     logger = ulogger.Logger()
     logger.info("[MAIN]SLAVE_INIT.")
 
+    from network import WLAN, STA_IF
+    wlan = WLAN(STA_IF)
+    wlan.active(True)
+
+    while not wlan.isconnected():
+        await uasyncio.sleep(5)
+        wlan.connect(wifi_ssid, wifi_psk)
+        logger.info("Attempting WiFi Connect")
+    logger.info("Connected!")
+    gc.collect()
+
     if rc_module.rc_slave_init() is False:
         return
 
-    import network
     from control import BBL_Controller
     from parser import DataParser
     from microdot import Microdot
     gc.collect()
-
-    wlan = network.WLAN(network.STA_IF)
-    wlan.active(True)
-    wlan.connect(wifi_ssid, wifi_psk)
-
-    while not wlan.isconnected():
-        await uasyncio.sleep(60)
-        wlan.connect(wifi_ssid, wifi_psk)
 
     data_parser = DataParser()
     bbl_controller = BBL_Controller()
@@ -264,7 +268,7 @@ async def slave_init():
                 sys.exit()
             await uasyncio.sleep(0.02)
 
-    http_server.run()
+    uasyncio.create_task(http_server.start_server(debug=True))
 
     await uasyncio.gather(
         control_task(),
