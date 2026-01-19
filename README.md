@@ -4,7 +4,7 @@ This software, when flashed to a CyberBrick Multi-Function Core Board, will conv
 
 To use this:
 
-1. Install [Visual Studio Code](https://code.visualstudio.com/) and [Node.js](https://nodejs.org/en/download/lts).
+1. Install [Visual Studio Code](https://code.visualstudio.com/), [Node.js](https://nodejs.org/en/download/lts), and [Git for Windows](https://git-scm.com/install/windows).
 2. In VS Code, install the [Pymakr extension](https://marketplace.visualstudio.com/items?itemName=pycom.Pymakr).
 3. In VS Code, open the `src/app_train` folder.
 4. Remove the Multi-Function Core Board from the model and connect it to your computer. You should see a green LED assuming the RC application has been flashed.
