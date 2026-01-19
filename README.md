@@ -12,5 +12,5 @@ To use this:
 6. In the Pymakr tab, connect to your device and use the "Stop Script" action, then "Sync Files to Device."
 7. Reinstall the Core Board in the receiver board.
 8. Turn the model on and wait ~10 seconds for WiFi connection.
-9. Once you see the device on the network, you can access it over HTTP at its IP address on port 5000.
+9. Once you see the device on the network (its hostname will start with `mpy-` and end with `esp32c3`), you can access it over HTTP at its IP address on port 5000.
 10. Use the provided web page to control the train speeds.
