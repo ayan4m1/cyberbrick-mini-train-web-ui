@@ -124,7 +124,7 @@ async def main():
 
         return '', 302, { 'Location': '/' }
 
-    await uasyncio.create_task(http_server.start_server())
+    await uasyncio.create_task(http_server.start_server(port=80))
 
 
 if __name__ == "__main__":
