@@ -1,6 +1,6 @@
 # CyberBrick Mini Train custom application
 
-This software, when flashed to a CyberBrick Multi-Function Core Board, will convert it into a custom web server for the [CyberBrick Motor Box for Mini Train](https://makerworld.com/en/models/1886257-cyberbrick-motor-box-for-mini-train-diorama).
+This software, when flashed to a CyberBrick Multi-Function Core Board, will convert it into a custom web server for the [CyberBrick Motor Box for Mini Train](https://makerworld.com/en/models/1886257-cyberbrick-motor-box-for-mini-train-diorama). You can control the model from any device with a web browser without the need for a CyberBrick remote transmitter.
 
 To use this:
 
