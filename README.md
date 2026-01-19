@@ -22,4 +22,15 @@ This repository contains the following content:
 
 ### Mini Train application
 
-In the `src/app_rc` folder, you can see the code used to implement web control of the Mini Train model. To use it, install Visual Studio Code, and then install the Pymakr extension in VS Code. Connect the Multi-Function Core Board and add the device under the Pymakr tab. Set your WiFi credentials in http_main.py, then connect to your device, use the "Stop Script" action, then "Sync Files to Device," and then reinstall the Core Board in the receiver board. Turn the model on and once you see the device on the network, you can access it over HTTP at its IP address on port 5000.
+To use this:
+
+1. Install [Visual Studio Code](https://code.visualstudio.com/) and [Node.js](https://nodejs.org/en/download/lts).
+2. In VS Code, install the [Pymakr extension](https://marketplace.visualstudio.com/items?itemName=pycom.Pymakr).
+3. Open the `src/app_train` folder.
+4. Connect the Multi-Function Core Board and add the device under the Pymakr tab.
+5. Set your WiFi credentials in http_main.py.
+6. In the Pymakr tab, connect to your device and use the "Stop Script" action, then "Sync Files to Device."
+7. Reinstall the Core Board in the receiver board.
+8. Turn the model on and wait ~10 seconds for WiFi connection.
+9. Once you see the device on the network, you can access it over HTTP at its IP address on port 5000.
+10. Use the provided web page to control the train speeds.
