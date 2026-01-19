@@ -6,7 +6,7 @@ To use this:
 
 1. Install [Visual Studio Code](https://code.visualstudio.com/) and [Node.js](https://nodejs.org/en/download/lts).
 2. In VS Code, install the [Pymakr extension](https://marketplace.visualstudio.com/items?itemName=pycom.Pymakr).
-3. Open the `src/app_train` folder.
+3. In VS Code, open the `src/app_train` folder.
 4. Connect the Multi-Function Core Board and add the device under the Pymakr tab.
 5. Set your WiFi credentials in http_main.py.
 6. In the Pymakr tab, connect to your device and use the "Stop Script" action, then "Sync Files to Device."
