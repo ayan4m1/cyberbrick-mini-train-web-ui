@@ -15,4 +15,4 @@ To use this:
 9. Once you see the device on the network (its hostname will start with `mpy-` and end with `esp32c3`), you can access it over HTTP at its IP address on port 5000.
 10. Use the provided web page to control the train speeds.
 
-To revert back to the original RC application, simply use the CyberBrick app and reflash it when prompted.
+To revert back to the original RC application, simply use the CyberBrick app to send the Motor Box configuration to the receiver and reflash it when prompted.
