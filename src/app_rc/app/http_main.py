@@ -78,7 +78,7 @@ async def main():
     http_server = Microdot()
 
     @http_server.route('/')
-    async def index():
+    async def index(request):
         global train_speeds
 
         return f'''
@@ -90,21 +90,30 @@ async def main():
     <body>
         <h1>Mini Train RC Control</h1>
         <form action="/control" method="POST">
-            <p>Train 1 @ <input type="number" min="0" max="100" step="5" name="rpmList" value="{train_speeds[0]}" />% RPM</p>
-            <p>Train 2 @ <input type="number" min="0" max="100" step="5" name="rpmList" value="{train_speeds[1]}" />% RPM</p>
-            <p>Train 3 @ <input type="number" min="0" max="100" step="5" name="rpmList" value="{train_speeds[2]}" />% RPM</p>
-            <p>Train 4 @ <input type="number" min="0" max="100" step="5" name="rpmList" value="{train_speeds[3]}" />% RPM</p>
+            <p>Train 1 @ <input type="number" min="0" max="100" step="5" name="rpmList[]" value="{train_speeds[0]}" />% RPM</p>
+            <p>Train 2 @ <input type="number" min="0" max="100" step="5" name="rpmList[]" value="{train_speeds[1]}" />% RPM</p>
+            <p>Train 3 @ <input type="number" min="0" max="100" step="5" name="rpmList[]" value="{train_speeds[2]}" />% RPM</p>
+            <p>Train 4 @ <input type="number" min="0" max="100" step="5" name="rpmList[]" value="{train_speeds[3]}" />% RPM</p>
             <p><button type="submit">Update</button></p>
         </form>
     </body>
 </html>
-'''
+''', 200, { 'Content-Type': 'text/html' }
 
     @http_server.route('/control', methods=['POST'])
-    async def control():
-        return f'''OK'''
+    async def control(request):
+        global train_speeds
 
-    http_server.run()
+        new_speeds = request.form.getlist('rpmList[]')
+
+        train_speeds[0] = new_speeds[0]
+        train_speeds[1] = new_speeds[1]
+        train_speeds[2] = new_speeds[2]
+        train_speeds[3] = new_speeds[3]
+
+        return '', 302, { 'Location': '/' }
+
+    await uasyncio.create_task(http_server.start_server())
 
 
 if __name__ == "__main__":

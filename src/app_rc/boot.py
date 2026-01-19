@@ -19,6 +19,7 @@ del _PRODUCT_NAME
 del _PRODUCT_VERSION
 
 sys.path.append('/app')
+import uasyncio
 import http_main
 
-http_main.main()
+uasyncio.run(http_main.main())
