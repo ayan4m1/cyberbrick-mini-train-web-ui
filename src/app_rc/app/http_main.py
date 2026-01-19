@@ -19,8 +19,14 @@ if '.frozen' in sys.path:
     sys.path.append('.frozen')
 
 wifi_ssid = 'qux'        # WiFi station ID
-wifi_psk = 'wi9NNYara'   # WiFi pre-shared key
+wifi_psk = 'changeme'    # WiFi pre-shared key
 train_speeds = [0, 0, 0, 0]
+
+from bbl.motors import MotorsController
+from bbl.servos import ServosController, SERVO_CHANNEL1, SERVO_CHANNEL2
+
+motors = MotorsController()
+servos = ServosController()
 
 class Clock(ulogger.BaseClock):
     def __init__(self):
@@ -90,10 +96,10 @@ async def main():
     <body>
         <h1>Mini Train RC Control</h1>
         <form action="/control" method="POST">
-            <p>Train 1 @ <input type="number" min="0" max="100" step="5" name="rpmList[]" value="{train_speeds[0]}" />% RPM</p>
-            <p>Train 2 @ <input type="number" min="0" max="100" step="5" name="rpmList[]" value="{train_speeds[1]}" />% RPM</p>
-            <p>Train 3 @ <input type="number" min="0" max="100" step="5" name="rpmList[]" value="{train_speeds[2]}" />% RPM</p>
-            <p>Train 4 @ <input type="number" min="0" max="100" step="5" name="rpmList[]" value="{train_speeds[3]}" />% RPM</p>
+            <p>Train 1 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[0]}" />% RPM</p>
+            <p>Train 2 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[1]}" />% RPM</p>
+            <p>Train 3 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[2]}" />% RPM</p>
+            <p>Train 4 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[3]}" />% RPM</p>
             <p><button type="submit">Update</button></p>
         </form>
     </body>
@@ -102,14 +108,19 @@ async def main():
 
     @http_server.route('/control', methods=['POST'])
     async def control(request):
-        global train_speeds
+        global train_speeds, motors, servos
 
         new_speeds = request.form.getlist('rpmList[]')
 
-        train_speeds[0] = new_speeds[0]
-        train_speeds[1] = new_speeds[1]
-        train_speeds[2] = new_speeds[2]
-        train_speeds[3] = new_speeds[3]
+        train_speeds[0] = int(new_speeds[0])
+        train_speeds[1] = int(new_speeds[1])
+        train_speeds[2] = int(new_speeds[2])
+        train_speeds[3] = int(new_speeds[3])
+
+        motors.set_speed(1, round((train_speeds[0] / 1e2) * 2048))
+        motors.set_speed(2, round((train_speeds[1] / 1e2) * 2048))
+        servos.set_speed(3, train_speeds[2])
+        servos.set_speed(4, train_speeds[3])
 
         return '', 302, { 'Location': '/' }
 
