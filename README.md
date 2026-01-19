@@ -20,27 +20,6 @@ This repository contains the following content:
 
 ---
 
-### RC controller application
+### Mini Train application
 
-Installation environment dependency:
-
-    $ pip install -r requirements.txt
-
-Enter the RC code directory:
-
-    $ cd src/app_rc/
-
-In the app_rc folder, you can see the startup and control code used to implement RC applications. To achieve RC application functionality, you can upload the directory contents to the onboard file system directory of Multi-Function Core Board.
-
-Set your WiFi credentials in rc_main.py. Then, once you see the device on the network, you can access it over HTTP at its IP address.
-
-It is recommended to use the mpy_cross tool to convert [control.py](src/app_rc/app/control.py) and [parser.py](src/app_rc/app/parser.py) into bytecode in (.mpy) format, with the same name as the (.py) program. When encountering the problem of insufficient RAM space during program execution.
-
-    $ mpy-cross .\app\control.py
-    $ mpy-cross .\app\parse.py
-
-### Timelapse Kit application
-
-    $ cd src/app_timelapse/
-
-Enter the timelapse code directory, upload the directory contents to the onboard file system directory of Multi-Function Core Board.
+In the `src/app_rc` folder, you can see the code used to implement web control of the Mini Train model. To use it, install Visual Studio Code, and then install the Pymakr extension in VS Code. Connect the Multi-Function Core Board and add the device under the Pymakr tab. Set your WiFi credentials in http_main.py, then connect to your device, use the "Stop Script" action, then "Sync Files to Device," and then reinstall the Core Board in the receiver board. Turn the model on and once you see the device on the network, you can access it over HTTP at its IP address on port 5000.

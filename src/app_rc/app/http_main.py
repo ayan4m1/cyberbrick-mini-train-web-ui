@@ -23,7 +23,7 @@ wifi_psk = 'changeme'    # WiFi pre-shared key
 train_speeds = [0, 0, 0, 0]
 
 from bbl.motors import MotorsController
-from bbl.servos import ServosController, SERVO_CHANNEL1, SERVO_CHANNEL2
+from bbl.servos import ServosController
 
 motors = MotorsController()
 servos = ServosController()
