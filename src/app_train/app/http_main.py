@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {{
                 servos.set_speed(3, train_speeds[2])
                 servos.set_speed(4, train_speeds[3])
             except Exception as e:
-                logger.error(f'[MAIN]{e}')
+                logger.error(f'[LOOP]{e}')
             await uasyncio.sleep(update_speed)
 
     await uasyncio.gather(http_task, update_task())
