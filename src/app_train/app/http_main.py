@@ -40,6 +40,7 @@ class Clock(ulogger.BaseClock):
         return '%d' % (inv)
 
 async def main():
+    # get restart cause and initialize logging
     rst_c = machine.reset_cause()
     log_clock = Clock()
     log_handler_to_term = ulogger.Handler(
@@ -69,9 +70,11 @@ async def main():
     }
     reset_cause = rc2str.get(rst_c, str(rst_c))
 
+    # log restart cause
     logger.info(f'[MAIN]{reset_cause}')
     del rc2str
 
+    # connect to WiFi
     from network import WLAN, STA_IF
     wlan = WLAN(STA_IF)
     wlan.active(True)
@@ -83,6 +86,7 @@ async def main():
     logger.info("[WIFI]Connected!")
     gc.collect()
 
+    # set up HTTP server
     from microdot import Microdot
     http_server = Microdot()
 
@@ -168,13 +172,13 @@ document.addEventListener('DOMContentLoaded', () => {{
 
         return '', 302, { 'Location': '/' }
 
-    http_task = uasyncio.create_task(http_server.start_server(port=80))
-
+    # run update task every {update_speed} seconds
     async def update_task():
         global update_speed, train_random_speed, train_speeds, motors, servos
 
         while True:
             try:
+                # generate random speeds rounded to 5% intervals
                 if train_random_speed[0]:
                     train_speeds[0] = round(random() * 100)
                     train_speeds[0] = train_speeds[0] - train_speeds[0] % 5
@@ -188,14 +192,20 @@ document.addEventListener('DOMContentLoaded', () => {{
                     train_speeds[3] = round(random() * 100)
                     train_speeds[3] = train_speeds[3] - train_speeds[3] % 5
 
+                # set motor and servo speeds
                 motors.set_speed(1, round((train_speeds[0] / 1e2) * 2048))
                 motors.set_speed(2, round((train_speeds[1] / 1e2) * 2048))
                 servos.set_speed(3, train_speeds[2])
                 servos.set_speed(4, train_speeds[3])
             except Exception as e:
                 logger.error(f'[LOOP]{e}')
+            # wait for the configured interval
             await uasyncio.sleep(update_speed)
 
+    # start HTTP server
+    http_task = uasyncio.create_task(http_server.start_server(port=80))
+
+    # run HTTP server and update task in parallel
     await uasyncio.gather(http_task, update_task())
 
 
