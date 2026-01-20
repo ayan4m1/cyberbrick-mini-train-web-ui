@@ -104,7 +104,7 @@ async def main():
 document.addEventListener('DOMContentLoaded', () => {{
     for (let i = 1; i <= 4; i++) {{
         document.querySelector(`#randomize${{i}}`).onclick = () => {{
-            document.querySelector(`#rpm${{i}}`).readOnly = !document.querySelector(`#rpm${{i}}`).readOnly;
+            document.querySelector(`#speed${{i}}`).readOnly = !document.querySelector(`#speed${{i}}`).readOnly;
         }};
     }}
 }});
@@ -114,28 +114,28 @@ document.addEventListener('DOMContentLoaded', () => {{
         <h1>Mini Train RC Control</h1>
         <form action="/control" method="POST">
             <p>
-                Train 1 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[0]}" id="rpm1" {'readonly' if train_random_speed[0] else ''} />% RPM
+                Train 1 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[0]}" id="speed1" {'readonly' if train_random_speed[0] else ''} />%
                 <input type="checkbox" name="randomize[]" value="1" id="randomize1" {'checked' if train_random_speed[0] else ''}/>
                 <label for="randomize1">Randomize</label>
                 <input type="checkbox" name="reverse[]" value="1" id="reverse1" {'checked' if train_reverse[0] else ''}/>
                 <label for="reverse1">Reverse</label>
             </p>
             <p>
-                Train 2 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[1]}" id="rpm2" {'readonly' if train_random_speed[1] else ''} />% RPM
+                Train 2 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[1]}" id="speed2" {'readonly' if train_random_speed[1] else ''} />%
                 <input type="checkbox" name="randomize[]" value="2" id="randomize2" {'checked' if train_random_speed[1] else ''}/>
                 <label for="randomize2">Randomize</label>
                 <input type="checkbox" name="reverse[]" value="2" id="reverse2" {'checked' if train_reverse[1] else ''}/>
                 <label for="reverse2">Reverse</label>
             </p>
             <p>
-                Train 3 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[2]}" id="rpm3" {'readonly' if train_random_speed[2] else ''} />% RPM
+                Train 3 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[2]}" id="speed3" {'readonly' if train_random_speed[2] else ''} />%
                 <input type="checkbox" name="randomize[]" value="3" id="randomize3" {'checked' if train_random_speed[2] else ''}/>
                 <label for="randomize3">Randomize</label>
                 <input type="checkbox" name="reverse[]" value="3" id="reverse3" {'checked' if train_reverse[2] else ''}/>
                 <label for="reverse3">Reverse</label>
             </p>
             <p>
-                Train 4 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[3]}" id="rpm4" {'readonly' if train_random_speed[3] else ''} />% RPM
+                Train 4 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[3]}" id="speed4" {'readonly' if train_random_speed[3] else ''} />%
                 <input type="checkbox" name="randomize[]" value="4" id="randomize4" {'checked' if train_random_speed[3] else ''}/>
                 <label for="randomize4">Randomize</label>
                 <input type="checkbox" name="reverse[]" value="4" id="reverse4" {'checked' if train_reverse[3] else ''}/>
