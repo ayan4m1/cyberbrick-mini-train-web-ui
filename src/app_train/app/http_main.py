@@ -167,23 +167,28 @@ document.addEventListener('DOMContentLoaded', () => {{
 
         while True:
             try:
-                for i in range(4):
-                    # generate random speeds rounded to 5% intervals
-                    if train_random_speed[i]:
-                        train_speeds[i] = round(random() * 100)
-                        train_speeds[i] = train_speeds[i] - train_speeds[i] % 5
-                    # perform clamping on speed values
-                    train_speeds[i] = min(100, max(-100, train_speeds[i]))
+                while True:
+                    try:
+                        for i in range(4):
+                            # generate random speeds rounded to 5% intervals
+                            if train_random_speed[i]:
+                                train_speeds[i] = round(random() * 100)
+                                train_speeds[i] = train_speeds[i] - train_speeds[i] % 5
+                            # perform clamping on speed values
+                            train_speeds[i] = min(100, max(-100, train_speeds[i]))
 
-                # set motor and servo speeds
-                motors.set_speed(1, round((train_speeds[0] / 1e2) * 2048))
-                motors.set_speed(2, round((train_speeds[1] / 1e2) * 2048))
-                servos.set_speed(3, train_speeds[2])
-                servos.set_speed(4, train_speeds[3])
+                        # set motor and servo speeds
+                        motors.set_speed(1, round((train_speeds[0] / 1e2) * 2048))
+                        motors.set_speed(2, round((train_speeds[1] / 1e2) * 2048))
+                        servos.set_speed(3, train_speeds[2])
+                        servos.set_speed(4, train_speeds[3])
+                    except Exception as e:
+                        logger.error(f'[INLOOP]{e}')
+                    # wait for the configured interval
+                    await uasyncio.sleep(update_speed)
             except Exception as e:
-                logger.error(f'[LOOP]{e}')
-            # wait for the configured interval
-            await uasyncio.sleep(update_speed)
+                logger.error(f'[OUTLOOP]{e}')
+                await uasyncio.sleep(1)
 
     # start HTTP server
     http_task = uasyncio.create_task(http_server.start_server(port=80))
