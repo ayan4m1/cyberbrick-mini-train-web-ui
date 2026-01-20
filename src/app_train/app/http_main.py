@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {{
                 <label for="randomize4">Randomize</label>
             </p>
             <p>
-                Random Update Speed: <input type="number" min="0" max="180" step="0.1" name="randomSpeed" value="{update_speed}" /> secs
+                Random Update Speed: <input type="number" min="0" max="3600" step="0.1" name="randomSpeed" value="{update_speed}" /> secs
             </p>
             <p><button type="submit">Update</button></p>
         </form>
