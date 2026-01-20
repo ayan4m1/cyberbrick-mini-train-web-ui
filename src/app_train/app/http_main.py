@@ -113,22 +113,22 @@ document.addEventListener('DOMContentLoaded', () => {{
         <h1>Mini Train RC Control</h1>
         <form action="/control" method="POST">
             <p>
-                Train 1 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[0]}" id="rpm1" />% RPM
+                Train 1 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[0]}" id="rpm1" {'readonly' if train_random_speed[0] else ''} />% RPM
                 <input type="checkbox" name="randomize[]" value="1" id="randomize1" {'checked' if train_random_speed[0] else ''}/>
                 <label for="randomize1">Randomize</label>
             </p>
             <p>
-                Train 2 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[1]}" id="rpm2" />% RPM
+                Train 2 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[1]}" id="rpm2" {'readonly' if train_random_speed[1] else ''} />% RPM
                 <input type="checkbox" name="randomize[]" value="2" id="randomize2" {'checked' if train_random_speed[1] else ''}/>
                 <label for="randomize2">Randomize</label>
             </p>
             <p>
-                Train 3 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[2]}" id="rpm3" />% RPM
+                Train 3 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[2]}" id="rpm3" {'readonly' if train_random_speed[2] else ''} />% RPM
                 <input type="checkbox" name="randomize[]" value="3" id="randomize3" {'checked' if train_random_speed[2] else ''}/>
                 <label for="randomize3">Randomize</label>
             </p>
             <p>
-                Train 4 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[3]}" id="rpm4" />% RPM
+                Train 4 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[3]}" id="rpm4" {'readonly' if train_random_speed[3] else ''} />% RPM
                 <input type="checkbox" name="randomize[]" value="4" id="randomize4" {'checked' if train_random_speed[3] else ''}/>
                 <label for="randomize4">Randomize</label>
             </p>
