@@ -192,6 +192,12 @@ document.addEventListener('DOMContentLoaded', () => {{
                     train_speeds[3] = round(random() * 100)
                     train_speeds[3] = train_speeds[3] - train_speeds[3] % 5
 
+                # perform clamping on speed values
+                train_speeds[0] = min(100, max(-100, train_speeds[0]))
+                train_speeds[1] = min(100, max(-100, train_speeds[1]))
+                train_speeds[2] = min(100, max(-100, train_speeds[2]))
+                train_speeds[3] = min(100, max(-100, train_speeds[3]))
+
                 # set motor and servo speeds
                 motors.set_speed(1, round((train_speeds[0] / 1e2) * 2048))
                 motors.set_speed(2, round((train_speeds[1] / 1e2) * 2048))
