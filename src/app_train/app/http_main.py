@@ -23,6 +23,7 @@ wifi_ssid = 'qux'        # WiFi station ID
 wifi_psk = 'changeme'    # WiFi pre-shared key
 train_speeds = [0, 0, 0, 0]
 train_random_speed = [False, False, False, False]
+train_reverse = [False, False, False, False]
 update_speed = 1
 
 from bbl.motors import MotorsController
@@ -92,7 +93,7 @@ async def main():
 
     @http_server.route('/')
     async def index(request):
-        global train_speeds, train_random_speed, update_speed
+        global train_speeds, train_random_speed, train_reverse, update_speed
 
         return f'''
 <!DOCTYPE html>
@@ -113,24 +114,32 @@ document.addEventListener('DOMContentLoaded', () => {{
         <h1>Mini Train RC Control</h1>
         <form action="/control" method="POST">
             <p>
-                Train 1 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[0]}" id="rpm1" {'readonly' if train_random_speed[0] else ''} />% RPM
+                Train 1 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[0]}" id="rpm1" {'readonly' if train_random_speed[0] else ''} />% RPM
                 <input type="checkbox" name="randomize[]" value="1" id="randomize1" {'checked' if train_random_speed[0] else ''}/>
                 <label for="randomize1">Randomize</label>
+                <input type="checkbox" name="reverse[]" value="1" id="reverse1" {'checked' if train_reverse[0] else ''}/>
+                <label for="reverse1">Reverse</label>
             </p>
             <p>
-                Train 2 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[1]}" id="rpm2" {'readonly' if train_random_speed[1] else ''} />% RPM
+                Train 2 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[1]}" id="rpm2" {'readonly' if train_random_speed[1] else ''} />% RPM
                 <input type="checkbox" name="randomize[]" value="2" id="randomize2" {'checked' if train_random_speed[1] else ''}/>
                 <label for="randomize2">Randomize</label>
+                <input type="checkbox" name="reverse[]" value="2" id="reverse2" {'checked' if train_reverse[1] else ''}/>
+                <label for="reverse2">Reverse</label>
             </p>
             <p>
-                Train 3 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[2]}" id="rpm3" {'readonly' if train_random_speed[2] else ''} />% RPM
+                Train 3 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[2]}" id="rpm3" {'readonly' if train_random_speed[2] else ''} />% RPM
                 <input type="checkbox" name="randomize[]" value="3" id="randomize3" {'checked' if train_random_speed[2] else ''}/>
                 <label for="randomize3">Randomize</label>
+                <input type="checkbox" name="reverse[]" value="3" id="reverse3" {'checked' if train_reverse[2] else ''}/>
+                <label for="reverse3">Reverse</label>
             </p>
             <p>
-                Train 4 @ <input type="number" min="-100" max="100" step="5" name="rpmList[]" value="{train_speeds[3]}" id="rpm4" {'readonly' if train_random_speed[3] else ''} />% RPM
+                Train 4 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[3]}" id="rpm4" {'readonly' if train_random_speed[3] else ''} />% RPM
                 <input type="checkbox" name="randomize[]" value="4" id="randomize4" {'checked' if train_random_speed[3] else ''}/>
                 <label for="randomize4">Randomize</label>
+                <input type="checkbox" name="reverse[]" value="4" id="reverse4" {'checked' if train_reverse[3] else ''}/>
+                <label for="reverse4">Reverse</label>
             </p>
             <p>
                 Random Update Speed: <input type="number" min="0.1" max="3600" step="0.1" name="randomSpeed" value="{update_speed}" /> secs
@@ -145,8 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {{
     async def control(request):
         global train_speeds, train_random_speed, update_speed
 
-        new_speeds = request.form.getlist('rpmList[]')
+        new_speeds = request.form.getlist('speeds[]')
         new_randoms = request.form.getlist('randomize[]')
+        new_reverses = request.form.getlist('reverse[]')
         new_random_speed = request.form.get('randomSpeed')
 
         for i in range(4):
@@ -156,36 +166,43 @@ document.addEventListener('DOMContentLoaded', () => {{
                 return f'Invalid speed for train {i + 1}'
 
             train_random_speed[i] = True if str(i + 1) in new_randoms else False
+            train_reverse[i] = True if str(i + 1) in new_reverses else False
 
         update_speed = float(new_random_speed)
 
         return '', 302, { 'Location': '/' }
 
-    # run update task every {update_speed} seconds
-    async def update_task():
-        global update_speed, train_random_speed, train_speeds, motors, servos
+    async def inner_update():
+        global update_speed, train_random_speed, train_reverse, train_speeds, motors, servos
 
         while True:
             try:
-                while True:
-                    try:
-                        for i in range(4):
-                            # generate random speeds rounded to 5% intervals
-                            if train_random_speed[i]:
-                                train_speeds[i] = round(random() * 100)
-                                train_speeds[i] = train_speeds[i] - train_speeds[i] % 5
-                            # perform clamping on speed values
-                            train_speeds[i] = min(100, max(-100, train_speeds[i]))
+                for i in range(4):
+                    # generate random speeds rounded to 5% intervals
+                    if train_random_speed[i]:
+                        train_speeds[i] = round(random() * 100)
+                        # reverse speed if direction is reversed
+                        if train_reverse[i]:
+                            train_speeds[i] = train_speeds[i] * -1
+                        train_speeds[i] = train_speeds[i] - train_speeds[i] % 5
+                    # perform clamping on speed values
+                    train_speeds[i] = min(100, max(-100, train_speeds[i]))
 
-                        # set motor and servo speeds
-                        motors.set_speed(1, round((train_speeds[0] / 1e2) * 2048))
-                        motors.set_speed(2, round((train_speeds[1] / 1e2) * 2048))
-                        servos.set_speed(3, train_speeds[2])
-                        servos.set_speed(4, train_speeds[3])
-                    except Exception as e:
-                        logger.error(f'[INLOOP]{e}')
-                    # wait for the configured interval
-                    await uasyncio.sleep(update_speed)
+                # set motor and servo speeds
+                motors.set_speed(1, round((train_speeds[0] / 1e2) * 2048))
+                motors.set_speed(2, round((train_speeds[1] / 1e2) * 2048))
+                servos.set_speed(3, train_speeds[2])
+                servos.set_speed(4, train_speeds[3])
+            except Exception as e:
+                logger.error(f'[INLOOP]{e}')
+            # wait for the configured interval
+            await uasyncio.sleep(update_speed)
+
+    # run update task every {update_speed} seconds
+    async def update_task():
+        while True:
+            try:
+                await inner_update()
             except Exception as e:
                 logger.error(f'[OUTLOOP]{e}')
                 await uasyncio.sleep(1)
