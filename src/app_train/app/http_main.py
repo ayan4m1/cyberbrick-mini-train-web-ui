@@ -149,24 +149,13 @@ document.addEventListener('DOMContentLoaded', () => {{
         new_randoms = request.form.getlist('randomize[]')
         new_random_speed = request.form.get('randomSpeed')
 
-        train_speeds[0] = int(new_speeds[0])
-        train_speeds[1] = int(new_speeds[1])
-        train_speeds[2] = int(new_speeds[2])
-        train_speeds[3] = int(new_speeds[3])
+        for i in range(4):
+            train_speeds[i] = int(new_speeds[i])
 
-        if train_speeds[0] < -100 or train_speeds[0] > 100:
-            return 'Invalid speed for train 1!'
-        if train_speeds[1] < -100 or train_speeds[1] > 100:
-            return 'Invalid speed for train 2!'
-        if train_speeds[2] < -100 or train_speeds[2] > 100:
-            return 'Invalid speed for train 3!'
-        if train_speeds[3] < -100 or train_speeds[3] > 100:
-            return 'Invalid speed for train 4!'
+            if train_speeds[i] < -100 or train_speeds[i] > 100:
+                return f'Invalid speed for train {i + 1}'
 
-        train_random_speed[0] = True if '1' in new_randoms else False
-        train_random_speed[1] = True if '2' in new_randoms else False
-        train_random_speed[2] = True if '3' in new_randoms else False
-        train_random_speed[3] = True if '4' in new_randoms else False
+            train_random_speed[i] = True if str(i + 1) in new_randoms else False
 
         update_speed = float(new_random_speed)
 
@@ -178,25 +167,13 @@ document.addEventListener('DOMContentLoaded', () => {{
 
         while True:
             try:
-                # generate random speeds rounded to 5% intervals
-                if train_random_speed[0]:
-                    train_speeds[0] = round(random() * 100)
-                    train_speeds[0] = train_speeds[0] - train_speeds[0] % 5
-                if train_random_speed[1]:
-                    train_speeds[1] = round(random() * 100)
-                    train_speeds[1] = train_speeds[1] - train_speeds[1] % 5
-                if train_random_speed[2]:
-                    train_speeds[2] = round(random() * 100)
-                    train_speeds[2] = train_speeds[2] - train_speeds[2] % 5
-                if train_random_speed[3]:
-                    train_speeds[3] = round(random() * 100)
-                    train_speeds[3] = train_speeds[3] - train_speeds[3] % 5
-
-                # perform clamping on speed values
-                train_speeds[0] = min(100, max(-100, train_speeds[0]))
-                train_speeds[1] = min(100, max(-100, train_speeds[1]))
-                train_speeds[2] = min(100, max(-100, train_speeds[2]))
-                train_speeds[3] = min(100, max(-100, train_speeds[3]))
+                for i in range(4):
+                    # generate random speeds rounded to 5% intervals
+                    if train_random_speed[i]:
+                        train_speeds[i] = round(random() * 100)
+                        train_speeds[i] = train_speeds[i] - train_speeds[i] % 5
+                    # perform clamping on speed values
+                    train_speeds[i] = min(100, max(-100, train_speeds[i]))
 
                 # set motor and servo speeds
                 motors.set_speed(1, round((train_speeds[0] / 1e2) * 2048))
