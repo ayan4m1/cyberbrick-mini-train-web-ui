@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {{
             </p>
             <p><button type="submit">Update</button></p>
         </form>
+        <p style="text-align:right;">Model design by <a href="https://makerworld.com/en/@BamBamDesign" target="_blank">BamBam Design</a>.</p>
     </body>
 </html>
 ''', 200, { 'Content-Type': 'text/html' }
