@@ -11,7 +11,7 @@ To use this:
 5. Add the device to the project in the Pymakr tab (quotation mark icon).
 6. Set your WiFi credentials in http_main.py.
 7. Open a Bash shell in VS Code and run `./build.sh`.
-8. In the Pymakr tab, connect to your device and use the "Stop Script" action. The green LED on the MFCB will change to a flashing purple. Use the "Sync Files to Device" action and wait for the files to copy to the MFCB.
+8. In the Pymakr tab, connect to your device and use the "Stop script" action from the "..." menu. The green LED on the MFCB will change to a flashing purple. Click the "Sync project to device" icon and wait for the files to copy to the MFCB.
 9. Disconnect the MFCB from your computer and reinstall it in the receiver board.
 10. Turn the model on and wait ~10 seconds for WiFi connection.
 11. Once you see the device on the network (its hostname will start with `mpy-` and end with `esp32c3`), you can access it over HTTP at its IP address.
