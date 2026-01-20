@@ -80,7 +80,7 @@ async def main():
     wlan.active(True)
 
     while not wlan.isconnected():
-        logger.info("[WIFI]Retry connect")
+        logger.info("[WIFI]Connect...")
         wlan.connect(wifi_ssid, wifi_psk)
         await uasyncio.sleep(5)
     logger.info("[WIFI]Connected!")
