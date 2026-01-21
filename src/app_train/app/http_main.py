@@ -2,7 +2,8 @@
 #
 # The CyberBrick Codebase License, see the file LICENSE for details.
 #
-# Copyright (c) 2025 MakerWorld
+# Copyright (c) 2026 ayan4m1 <andrew@bulletlogic.com>
+# Portions Copyright (c) 2025 MakerWorld
 #
 
 import sys
