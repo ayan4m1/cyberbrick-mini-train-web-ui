@@ -94,8 +94,6 @@ async def main():
 
     @http_server.route('/')
     async def index(request):
-        global train_speeds, train_random_speed, train_reverse, update_speed
-
         return f'''
 <!DOCTYPE html>
 <html>
@@ -205,7 +203,7 @@ button {{
         return '', 302, { 'Location': '/' }
 
     async def inner_update():
-        global update_speed, train_random_speed, train_reverse, train_speeds, motors, servos
+        global train_speeds
 
         while True:
             try:
