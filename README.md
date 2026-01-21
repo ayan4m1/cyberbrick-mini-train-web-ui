@@ -13,7 +13,7 @@ This software, when flashed to a CyberBrick Multi-Function Core Board, will conv
 3. In VS Code, open the `src/app_train` folder.
 4. Remove the Multi-Function Core Board from the model and connect it to your computer. You should see a green LED assuming the RC application has been flashed.
 5. Add the device to the project in the Pymakr tab (quotation mark icon).
-6. Set your WiFi credentials in http_main.py.
+6. Set your WiFi credentials in http_main.py. **NOTE**: The ESP32 only supports 2.4Ghz networks.
 7. Open a Bash shell in VS Code and run `./build.sh`.
 8. In the Pymakr tab, connect to your device and use the "Stop script" action from the "..." menu. The green LED on the MFCB will change to a flashing purple. Click the "Sync project to device" icon and wait for the files to copy to the MFCB.
 9. Disconnect the MFCB from your computer and reinstall it in the receiver board.
