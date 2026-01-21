@@ -105,10 +105,35 @@ document.addEventListener('DOMContentLoaded', () => {{
     for (let i = 1; i <= 4; i++) {{
         document.querySelector(`#randomize${{i}}`).onclick = () => {{
             document.querySelector(`#speed${{i}}`).readOnly = !document.querySelector(`#speed${{i}}`).readOnly;
+            document.querySelector(`#reverse${{i}}`).disabled = !document.querySelector(`#reverse${{i}}`).disabled;
         }};
     }}
 }});
         </script>
+        <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+html {{
+    font-family: 'Inter', sans-serif;
+    background-color: #3fa7d6;
+    color: #fefefe;
+}}
+body {{
+    max-width: 960px;
+    margin: 0 auto;
+}}
+h1 {{
+    text-align: center;
+    text-shadow: 0 0 4px #fefefe80;
+    margin: 8px 0 16px;
+}}
+button {{
+    background-color: #59cd90;
+    color: #fefefe;
+    border: 1px solid #1b6e8c;
+    border-radius: 4px;
+    padding: 8px;
+}}
+        </style>
     </head>
     <body>
         <h1>Mini Train RC Control</h1>
@@ -117,36 +142,36 @@ document.addEventListener('DOMContentLoaded', () => {{
                 Train 1 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[0]}" id="speed1" {'readonly' if train_random_speed[0] else ''} />%
                 <input type="checkbox" name="randomize[]" value="1" id="randomize1" {'checked' if train_random_speed[0] else ''}/>
                 <label for="randomize1">Randomize</label>
-                <input type="checkbox" name="reverse[]" value="1" id="reverse1" {'checked' if train_reverse[0] else ''}/>
+                <input type="checkbox" name="reverse[]" value="1" id="reverse1" {'checked' if train_reverse[0] else ''} {'' if train_random_speed[0] else 'disabled'} />
                 <label for="reverse1">Reverse</label>
             </p>
             <p>
                 Train 2 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[1]}" id="speed2" {'readonly' if train_random_speed[1] else ''} />%
                 <input type="checkbox" name="randomize[]" value="2" id="randomize2" {'checked' if train_random_speed[1] else ''}/>
                 <label for="randomize2">Randomize</label>
-                <input type="checkbox" name="reverse[]" value="2" id="reverse2" {'checked' if train_reverse[1] else ''}/>
+                <input type="checkbox" name="reverse[]" value="2" id="reverse2" {'checked' if train_reverse[1] else ''} {'' if train_random_speed[1] else 'disabled'} />
                 <label for="reverse2">Reverse</label>
             </p>
             <p>
                 Train 3 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[2]}" id="speed3" {'readonly' if train_random_speed[2] else ''} />%
                 <input type="checkbox" name="randomize[]" value="3" id="randomize3" {'checked' if train_random_speed[2] else ''}/>
                 <label for="randomize3">Randomize</label>
-                <input type="checkbox" name="reverse[]" value="3" id="reverse3" {'checked' if train_reverse[2] else ''}/>
+                <input type="checkbox" name="reverse[]" value="3" id="reverse3" {'checked' if train_reverse[2] else ''} {'' if train_random_speed[2] else 'disabled'} />
                 <label for="reverse3">Reverse</label>
             </p>
             <p>
                 Train 4 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[3]}" id="speed4" {'readonly' if train_random_speed[3] else ''} />%
                 <input type="checkbox" name="randomize[]" value="4" id="randomize4" {'checked' if train_random_speed[3] else ''}/>
                 <label for="randomize4">Randomize</label>
-                <input type="checkbox" name="reverse[]" value="4" id="reverse4" {'checked' if train_reverse[3] else ''}/>
+                <input type="checkbox" name="reverse[]" value="4" id="reverse4" {'checked' if train_reverse[3] else ''} {'' if train_random_speed[3] else 'disabled'} />
                 <label for="reverse4">Reverse</label>
             </p>
             <p>
-                Random Update Speed: <input type="number" min="0.1" max="3600" step="0.1" name="randomSpeed" value="{update_speed}" /> secs
+                Random Update Speed: <input type="number" min="0.1" max="3600" step="0.1" name="randomSpeed" value="{update_speed}" /> sec(s)
             </p>
             <p><button type="submit">Update</button></p>
         </form>
-        <p style="text-align:right;">Model design by <a href="https://makerworld.com/en/@BamBamDesign" target="_blank">BamBam Design</a>.</p>
+        <p style="text-align:right;">Model by <a href="https://makerworld.com/en/@BamBamDesign" target="_blank">BamBam Design</a>.</p>
     </body>
 </html>
 ''', 200, { 'Content-Type': 'text/html' }
