@@ -21,4 +21,14 @@ This software, when flashed to a CyberBrick Multi-Function Core Board, will conv
 11. Once you see the device on the network (its hostname will start with `mpy-` and end with `esp32c3`), you can access it over HTTP at its IP address.
 12. Use the provided web page to control the train speeds.
 
+## Uninstallation
+
 To revert back to the original RC application, simply use the CyberBrick app to send the Motor Box configuration to the receiver and reflash it when prompted.
+
+## Known Issues
+
+If you submit the form twice at once (i.e. clicking Update twice without waiting for the page to refresh) the web server can become stuck. If so, you will need to turn the model off and back on again.
+
+## Roadmap
+
+- Save/load configuration to/from flash storage
