@@ -25,6 +25,7 @@ train_speeds = [0, 0, 0, 0]
 train_random_speed = [False, False, False, False]
 train_reverse = [False, False, False, False]
 update_speed = 1
+max_random_delta = 100
 
 from bbl.motors import MotorsController
 from bbl.servos import ServosController
@@ -169,6 +170,9 @@ button {{
             <p>
                 Random Update Speed: <input type="number" min="0.1" max="3600" step="0.1" name="randomSpeed" value="{update_speed}" /> sec(s)
             </p>
+            <p>
+                Max Random Delta: <input type="number" min="5" max="100" step="5" name="maxRandomDelta" value="{max_random_delta}" />%
+            </p>
             <p><button type="submit">Update</button></p>
         </form>
         <p style="text-align:right;">Model by <a href="https://makerworld.com/en/@BamBamDesign" target="_blank">BamBam Design</a>.</p>
@@ -178,12 +182,13 @@ button {{
 
     @http_server.route('/control', methods=['POST'])
     async def control(request):
-        global train_speeds, train_random_speed, update_speed
+        global train_speeds, train_random_speed, update_speed, max_random_delta
 
         new_speeds = request.form.getlist('speeds[]')
         new_randoms = request.form.getlist('randomize[]')
         new_reverses = request.form.getlist('reverse[]')
         new_random_speed = request.form.get('randomSpeed')
+        new_random_delta = request.form.get('maxRandomDelta')
 
         for i in range(4):
             train_speeds[i] = int(new_speeds[i])
@@ -195,6 +200,7 @@ button {{
             train_reverse[i] = True if str(i + 1) in new_reverses else False
 
         update_speed = float(new_random_speed)
+        max_random_delta = int(new_random_delta)
 
         return '', 302, { 'Location': '/' }
 
@@ -206,8 +212,8 @@ button {{
                 for i in range(4):
                     # generate random speeds rounded to 5% intervals
                     if train_random_speed[i]:
-                        train_speeds[i] = round(random() * 100)
-                        # reverse speed if direction is reversed
+                        train_speeds[i] = abs(train_speeds[i] + round((random() - 0.5) * 2 * max_random_delta))
+                        # if reverse is set, invert speed
                         if train_reverse[i]:
                             train_speeds[i] = train_speeds[i] * -1
                         train_speeds[i] = train_speeds[i] - train_speeds[i] % 5
