@@ -1,6 +1,6 @@
 # CyberBrick Mini Train custom application
 
-This software, when flashed to a CyberBrick Multi-Function Core Board, will convert it into a custom web server for the [CyberBrick Motor Box for Mini Train](https://makerworld.com/en/models/1886257-cyberbrick-motor-box-for-mini-train-diorama). You can control the model from any device with a web browser without the need for a CyberBrick remote transmitter.
+This software, when flashed to a CyberBrick Multi-Function Core Board, will convert it into a custom web server for the [CyberBrick Motor Box for Mini Train](https://makerworld.com/en/models/1886257-cyberbrick-motor-box-for-mini-train-diorama). You can control the model from any device with a web browser without the need for a CyberBrick remote transmitter. Configuration is saved to flash and loaded on startup, so your setting persist between boots.
 
 ## Screenshot
 
@@ -28,7 +28,3 @@ To revert back to the original RC application, simply use the CyberBrick app to 
 ## Known Issues
 
 If you submit the form twice at once (i.e. clicking Update twice without waiting for the page to refresh) the web server can become stuck. If so, you will need to turn the model off and back on again.
-
-## Roadmap
-
-- Save/load configuration to/from flash storage

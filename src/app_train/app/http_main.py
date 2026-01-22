@@ -11,6 +11,7 @@ import gc
 import machine
 import uasyncio
 import time
+import ujson
 import ulogger
 from random import random
 
@@ -43,6 +44,8 @@ class Clock(ulogger.BaseClock):
         return '%d' % (inv)
 
 async def main():
+    global train_speeds, train_random_speed, train_reverse, update_speed, max_random_delta
+
     # get restart cause and initialize logging
     rst_c = machine.reset_cause()
     log_clock = Clock()
@@ -76,6 +79,21 @@ async def main():
     # log restart cause
     logger.info(f'[MAIN]{reset_cause}')
     del rc2str
+
+    try:
+        with open('train_config', 'r') as f:
+            config = ujson.load(f)
+
+            train_speeds = config['speeds']
+            train_random_speed = config['random_speed']
+            train_reverse = config['reverse']
+            update_speed = config['update_speed']
+            max_random_delta = config['max_random_delta']
+
+            del config
+    except Exception as e:
+        logger.warn(f"[CFG_LOAD]{e}.")
+    gc.collect()
 
     # connect to WiFi
     from network import WLAN, STA_IF
@@ -200,6 +218,22 @@ button {{
 
         update_speed = float(new_random_speed)
         max_random_delta = int(new_random_delta)
+
+        try:
+            with open('train_config', 'w') as f:
+                config = {
+                    'speeds': train_speeds,
+                    'random_speed': train_random_speed,
+                    'reverse': train_reverse,
+                    'update_speed': update_speed,
+                    'max_random_delta': max_random_delta
+                }
+                ujson.dump(config, f)
+
+                del config
+                gc.collect()
+        except Exception as e:
+            logger.error(f'[CFG_SAVE]{e}')
 
         return '', 302, { 'Location': '/' }
 
