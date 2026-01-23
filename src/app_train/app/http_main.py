@@ -28,7 +28,7 @@ train_random_speed = [False, False, False, False]
 train_reverse = [False, False, False, False]
 update_speed = 1
 max_random_delta = 100
-volcano_erupting = False
+volcano_mode = 'off'
 
 from bbl.leds import LEDController
 from bbl.motors import MotorsController
@@ -46,8 +46,16 @@ class Clock(ulogger.BaseClock):
         inv = time.time() - self.start
         return '%d' % (inv)
 
+def update_volcano_mode():
+    if volcano_mode is 'breathing':
+        leds.set_led_effect(2, 1000, 255, 1, 0xf0f000)
+    elif volcano_mode is 'solid':
+        leds.set_led_effect(0, 1000, 255, 1, 0xf0f000)
+    else:
+        leds.set_led_effect(0, 0, 0, 1, 0)
+
 async def main():
-    global train_speeds, train_random_speed, train_reverse, update_speed, max_random_delta, volcano_erupting
+    global train_speeds, train_random_speed, train_reverse, update_speed, max_random_delta, volcano_mode
 
     # get restart cause and initialize logging
     rst_c = machine.reset_cause()
@@ -92,7 +100,9 @@ async def main():
             train_reverse = config['reverse']
             update_speed = config['update_speed']
             max_random_delta = config['max_random_delta']
-            volcano_erupting = config['volcano_erupting']
+            volcano_mode = config['volcano_mode']
+            
+            update_volcano_mode()
 
             del config
     except Exception as e:
@@ -162,34 +172,39 @@ button {{
         <form action="/control" method="POST">
             <p>
                 Train 1 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[0]}" id="speed1" {'readonly' if train_random_speed[0] else ''} />%
-                <input type="checkbox" name="randomize[]" value="1" id="randomize1" {'checked' if train_random_speed[0] else ''} />
+                <input type="checkbox" name="randomize[]" value="1" id="randomize1" {'checked ' if train_random_speed[0] else ''}/>
                 <label for="randomize1">Randomize</label>
                 <input type="checkbox" name="reverse[]" value="1" id="reverse1" {'checked' if train_reverse[0] else ''} {'' if train_random_speed[0] else 'disabled'} />
                 <label for="reverse1">Reverse</label>
             </p>
             <p>
                 Train 2 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[1]}" id="speed2" {'readonly' if train_random_speed[1] else ''} />%
-                <input type="checkbox" name="randomize[]" value="2" id="randomize2" {'checked' if train_random_speed[1] else ''} />
+                <input type="checkbox" name="randomize[]" value="2" id="randomize2" {'checked ' if train_random_speed[1] else ''}/>
                 <label for="randomize2">Randomize</label>
                 <input type="checkbox" name="reverse[]" value="2" id="reverse2" {'checked' if train_reverse[1] else ''} {'' if train_random_speed[1] else 'disabled'} />
                 <label for="reverse2">Reverse</label>
             </p>
             <p>
                 Train 3 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[2]}" id="speed3" {'readonly' if train_random_speed[2] else ''} />%
-                <input type="checkbox" name="randomize[]" value="3" id="randomize3" {'checked' if train_random_speed[2] else ''} />
+                <input type="checkbox" name="randomize[]" value="3" id="randomize3" {'checked ' if train_random_speed[2] else ''}/>
                 <label for="randomize3">Randomize</label>
                 <input type="checkbox" name="reverse[]" value="3" id="reverse3" {'checked' if train_reverse[2] else ''} {'' if train_random_speed[2] else 'disabled'} />
                 <label for="reverse3">Reverse</label>
             </p>
             <p>
                 Train 4 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[3]}" id="speed4" {'readonly' if train_random_speed[3] else ''} />%
-                <input type="checkbox" name="randomize[]" value="4" id="randomize4" {'checked' if train_random_speed[3] else ''} />
+                <input type="checkbox" name="randomize[]" value="4" id="randomize4" {'checked ' if train_random_speed[3] else ''}/>
                 <label for="randomize4">Randomize</label>
                 <input type="checkbox" name="reverse[]" value="4" id="reverse4" {'checked' if train_reverse[3] else ''} {'' if train_random_speed[3] else 'disabled'} />
                 <label for="reverse4">Reverse</label>
             </p>
             <p>
-                Enable Volcano: <input type="checkbox" name="volcanoErupting" value="1" {'checked' if volcano_erupting else ''} />
+                Volcano Mode:
+                <select name="volcanoMode">
+                    <option value="off" {'selected ' if volcano_mode is 'off' else ''}>Off</option>
+                    <option value="solid" {'selected ' if volcano_mode is 'solid' else ''}>Solid</option>
+                    <option value="breathing" {'selected ' if volcano_mode is 'breathing' else ''}>Breathing</option>
+                </select>
             </p>
             <p>
                 Random Update Speed: <input type="number" min="0.1" max="3600" step="0.1" name="randomSpeed" value="{update_speed}" /> sec(s)
@@ -206,14 +221,14 @@ button {{
 
     @http_server.route('/control', methods=['POST'])
     async def control(request):
-        global train_speeds, train_random_speed, update_speed, max_random_delta, volcano_erupting
+        global train_speeds, train_random_speed, update_speed, max_random_delta, volcano_mode
 
         new_speeds = request.form.getlist('speeds[]')
         new_randoms = request.form.getlist('randomize[]')
         new_reverses = request.form.getlist('reverse[]')
         new_random_speed = request.form.get('randomSpeed')
         new_random_delta = request.form.get('maxRandomDelta')
-        new_volcano_erupting = request.form.get('volcanoErupting')
+        new_volcano_mode = request.form.get('volcanoMode')
 
         for i in range(4):
             train_speeds[i] = int(new_speeds[i])
@@ -226,12 +241,9 @@ button {{
 
         update_speed = float(new_random_speed)
         max_random_delta = int(new_random_delta)
-        volcano_erupting = new_volcano_erupting is '1'
+        volcano_mode = new_volcano_mode
 
-        if volcano_erupting:
-            leds.set_led_effect(0, 1000, 255, 1, 0xf0f000)
-        else:
-            leds.set_led_effect(0, 0, 0, 1, 0)
+        update_volcano_mode()
 
         try:
             with open('train_config', 'w') as f:
@@ -241,7 +253,7 @@ button {{
                     'reverse': train_reverse,
                     'update_speed': update_speed,
                     'max_random_delta': max_random_delta,
-                    'volcano_erupting': volcano_erupting
+                    'volcano_mode': volcano_mode
                 }
                 ujson.dump(config, f)
 
@@ -273,9 +285,6 @@ button {{
                 motors.set_speed(2, round((train_speeds[1] / 1e2) * 2048))
                 servos.set_speed(3, train_speeds[2])
                 servos.set_speed(4, train_speeds[3])
-
-                # update LED state
-                leds.timing_proc()
             except Exception as e:
                 logger.error(f'[INLOOP]{e}')
             # wait for the configured interval
@@ -290,11 +299,16 @@ button {{
                 logger.error(f'[OUTLOOP]{e}')
                 await uasyncio.sleep(1)
 
+    async def led_task():
+        while True:
+            leds.timing_proc()
+            await uasyncio.sleep(0.05)
+
     # start HTTP server
     http_task = uasyncio.create_task(http_server.start_server(port=80))
 
     # run HTTP server and update task in parallel
-    await uasyncio.gather(http_task, update_task())
+    await uasyncio.gather(http_task, update_task(), led_task())
 
 
 if __name__ == "__main__":
