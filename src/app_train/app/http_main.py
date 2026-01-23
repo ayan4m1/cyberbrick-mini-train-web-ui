@@ -28,12 +28,15 @@ train_random_speed = [False, False, False, False]
 train_reverse = [False, False, False, False]
 update_speed = 1
 max_random_delta = 100
+volcano_erupting = False
 
+from bbl.leds import LEDController
 from bbl.motors import MotorsController
 from bbl.servos import ServosController
 
 motors = MotorsController()
 servos = ServosController()
+leds = LEDController("LED1")
 
 class Clock(ulogger.BaseClock):
     def __init__(self):
@@ -44,7 +47,7 @@ class Clock(ulogger.BaseClock):
         return '%d' % (inv)
 
 async def main():
-    global train_speeds, train_random_speed, train_reverse, update_speed, max_random_delta
+    global train_speeds, train_random_speed, train_reverse, update_speed, max_random_delta, volcano_erupting
 
     # get restart cause and initialize logging
     rst_c = machine.reset_cause()
@@ -89,6 +92,7 @@ async def main():
             train_reverse = config['reverse']
             update_speed = config['update_speed']
             max_random_delta = config['max_random_delta']
+            volcano_erupting = config['volcano_erupting']
 
             del config
     except Exception as e:
@@ -185,6 +189,9 @@ button {{
                 <label for="reverse4">Reverse</label>
             </p>
             <p>
+                Enable Volcano: <input type="checkbox" name="volcanoErupting" value="1" {'checked' if volcano_erupting else ''} />
+            </p>
+            <p>
                 Random Update Speed: <input type="number" min="0.1" max="3600" step="0.1" name="randomSpeed" value="{update_speed}" /> sec(s)
             </p>
             <p>
@@ -199,13 +206,14 @@ button {{
 
     @http_server.route('/control', methods=['POST'])
     async def control(request):
-        global train_speeds, train_random_speed, update_speed, max_random_delta
+        global train_speeds, train_random_speed, update_speed, max_random_delta, volcano_erupting
 
         new_speeds = request.form.getlist('speeds[]')
         new_randoms = request.form.getlist('randomize[]')
         new_reverses = request.form.getlist('reverse[]')
         new_random_speed = request.form.get('randomSpeed')
         new_random_delta = request.form.get('maxRandomDelta')
+        new_volcano_erupting = request.form.get('volcanoErupting')
 
         for i in range(4):
             train_speeds[i] = int(new_speeds[i])
@@ -218,6 +226,12 @@ button {{
 
         update_speed = float(new_random_speed)
         max_random_delta = int(new_random_delta)
+        volcano_erupting = new_volcano_erupting is '1'
+
+        if volcano_erupting:
+            leds.set_led_effect(0, 1000, 255, 1, 0xf0f000)
+        else:
+            leds.set_led_effect(0, 0, 0, 1, 0)
 
         try:
             with open('train_config', 'w') as f:
@@ -226,7 +240,8 @@ button {{
                     'random_speed': train_random_speed,
                     'reverse': train_reverse,
                     'update_speed': update_speed,
-                    'max_random_delta': max_random_delta
+                    'max_random_delta': max_random_delta,
+                    'volcano_erupting': volcano_erupting
                 }
                 ujson.dump(config, f)
 
@@ -258,6 +273,9 @@ button {{
                 motors.set_speed(2, round((train_speeds[1] / 1e2) * 2048))
                 servos.set_speed(3, train_speeds[2])
                 servos.set_speed(4, train_speeds[3])
+
+                # update LED state
+                leds.timing_proc()
             except Exception as e:
                 logger.error(f'[INLOOP]{e}')
             # wait for the configured interval
