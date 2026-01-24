@@ -7,12 +7,12 @@
 #
 
 import sys
-import gc
 import machine
 import uasyncio
 import time
 import ujson
 import ulogger
+from gc import collect as garbage_collect
 from random import random
 
 sys.path.append("/app")
@@ -115,9 +115,9 @@ async def main():
             update_volcano_mode()
 
             del config
+            garbage_collect()
     except Exception as e:
         logger.warn(f"[CFG_LOAD]{e}.")
-    gc.collect()
 
     # connect to WiFi
     from network import WLAN, STA_IF
@@ -129,7 +129,6 @@ async def main():
         wlan.connect(wifi_ssid, wifi_psk)
         await uasyncio.sleep(5)
     logger.info("[WIFI]Connected!")
-    gc.collect()
 
     # set up HTTP server
     from microdot import Microdot
@@ -269,7 +268,7 @@ button {{
                 ujson.dump(config, f)
 
                 del config
-                gc.collect()
+                garbage_collect()
         except Exception as e:
             logger.error(f'[CFG_SAVE]{e}')
 
