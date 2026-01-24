@@ -12,6 +12,7 @@ import ujson
 import ulogger
 import uasyncio
 from gc import collect as garbage_collect
+from network import WLAN, STA_IF
 from random import random
 from sys import path
 
@@ -21,15 +22,23 @@ if '.frozen' in path:
     path.remove('.frozen')
     path.append('.frozen')
 
+from microdot import Microdot
+from bbl.leds import LEDController
+from bbl.motors import MotorsController
+from bbl.servos import ServosController
+
+motors = MotorsController()
+servos = ServosController()
+leds = LEDController("LED1")
 
 wifi_ssid = 'qux'        # WiFi station ID
 wifi_psk = 'changeme'    # WiFi pre-shared key
 train_speeds = [0, 0, 0, 0]
-train_random_speed = [False, False, False, False]
-train_reverse = [False, False, False, False]
-update_speed = 1
-max_random_delta = 100
-volcano_mode = 'off'
+train_random_speed: list[bool] = [False, False, False, False]
+train_reverse: list[bool] = [False, False, False, False]
+update_speed: float = 1
+max_random_delta: int = 100
+volcano_mode: str = 'off'
 volcano_color: int = 0x000000
 
 BREATHING_EFFECT_SECONDS = 0.02
@@ -40,14 +49,8 @@ FIRE_EFFECT_SECONDS = 0.05
 FIRE_EFFECT_SPARK_MAX = 0.75
 FIRE_EFFECT_SPARK_MIN = 0.35
 OTHER_EFFECT_SECONDS = 0.5
-
-from bbl.leds import LEDController
-from bbl.motors import MotorsController
-from bbl.servos import ServosController
-
-motors = MotorsController()
-servos = ServosController()
-leds = LEDController("LED1")
+SPEED_MIN = -100
+SPEED_MAX = 100
 
 class Clock(ulogger.BaseClock):
     def __init__(self):
@@ -121,10 +124,8 @@ async def main():
         logger.warn(f"[CFG_LOAD]{e}.")
 
     # connect to WiFi
-    from network import WLAN, STA_IF
     wlan = WLAN(STA_IF)
     wlan.active(True)
-
     while not wlan.isconnected():
         logger.info(f'[WIFI]Connect to {wifi_ssid}...')
         wlan.connect(wifi_ssid, wifi_psk)
@@ -132,16 +133,15 @@ async def main():
     logger.info("[WIFI]Connected!")
 
     # set up HTTP server
-    from microdot import Microdot
     http_server = Microdot()
 
     @http_server.route('/')
-    async def index(request):
+    async def index(_):
         return f'''
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Mini Train RC Control</title>
+        <title>Motor Box for Mini Train Control</title>
         <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', () => {{
     for (let i = 1; i <= 4; i++) {{
@@ -178,31 +178,31 @@ button {{
         </style>
     </head>
     <body>
-        <h1>Mini Train RC Control</h1>
+        <h1>Motor Box for Mini Train Control</h1>
         <form action="/control" method="POST">
             <p>
-                Train 1 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[0]}" id="speed1" {'readonly' if train_random_speed[0] else ''} />%
+                Train 1 @ <input type="number" min="{SPEED_MIN}" max="{SPEED_MAX}" step="5" name="speeds[]" value="{train_speeds[0]}" id="speed1" {'readonly' if train_random_speed[0] else ''} />%
                 <input type="checkbox" name="randomize[]" value="1" id="randomize1" {'checked ' if train_random_speed[0] else ''}/>
                 <label for="randomize1">Randomize</label>
                 <input type="checkbox" name="reverse[]" value="1" id="reverse1" {'checked' if train_reverse[0] else ''} {'' if train_random_speed[0] else 'disabled'} />
                 <label for="reverse1">Reverse</label>
             </p>
             <p>
-                Train 2 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[1]}" id="speed2" {'readonly' if train_random_speed[1] else ''} />%
+                Train 2 @ <input type="number" min="{SPEED_MIN}" max="{SPEED_MAX}" step="5" name="speeds[]" value="{train_speeds[1]}" id="speed2" {'readonly' if train_random_speed[1] else ''} />%
                 <input type="checkbox" name="randomize[]" value="2" id="randomize2" {'checked ' if train_random_speed[1] else ''}/>
                 <label for="randomize2">Randomize</label>
                 <input type="checkbox" name="reverse[]" value="2" id="reverse2" {'checked' if train_reverse[1] else ''} {'' if train_random_speed[1] else 'disabled'} />
                 <label for="reverse2">Reverse</label>
             </p>
             <p>
-                Train 3 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[2]}" id="speed3" {'readonly' if train_random_speed[2] else ''} />%
+                Train 3 @ <input type="number" min="{SPEED_MIN}" max="{SPEED_MAX}" step="5" name="speeds[]" value="{train_speeds[2]}" id="speed3" {'readonly' if train_random_speed[2] else ''} />%
                 <input type="checkbox" name="randomize[]" value="3" id="randomize3" {'checked ' if train_random_speed[2] else ''}/>
                 <label for="randomize3">Randomize</label>
                 <input type="checkbox" name="reverse[]" value="3" id="reverse3" {'checked' if train_reverse[2] else ''} {'' if train_random_speed[2] else 'disabled'} />
                 <label for="reverse3">Reverse</label>
             </p>
             <p>
-                Train 4 @ <input type="number" min="-100" max="100" step="5" name="speeds[]" value="{train_speeds[3]}" id="speed4" {'readonly' if train_random_speed[3] else ''} />%
+                Train 4 @ <input type="number" min="{SPEED_MIN}" max="{SPEED_MAX}" step="5" name="speeds[]" value="{train_speeds[3]}" id="speed4" {'readonly' if train_random_speed[3] else ''} />%
                 <input type="checkbox" name="randomize[]" value="4" id="randomize4" {'checked ' if train_random_speed[3] else ''}/>
                 <label for="randomize4">Randomize</label>
                 <input type="checkbox" name="reverse[]" value="4" id="reverse4" {'checked' if train_reverse[3] else ''} {'' if train_random_speed[3] else 'disabled'} />
