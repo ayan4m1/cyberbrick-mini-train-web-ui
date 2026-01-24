@@ -16,7 +16,7 @@ You can control all aspects of the model from any device with a web browser with
 4. Remove the Multi-Function Core Board from the model and connect it to your computer. You should see a green LED assuming the RC application has been flashed.
 5. Add the device to the project in the Pymakr tab (quotation mark icon).
 6. Set your WiFi credentials in http_main.py. **NOTE**: The ESP32 only supports 2.4Ghz networks.
-7. Open a Bash shell in VS Code and run `./build.sh`.
+7. Open a terminal in VS Code and run `./build.sh` (if Bash) or `./build.bat` (if cmd/PowerShell).
 8. In the Pymakr tab, connect to your device and use the "Stop script" action from the "..." menu. The green LED on the MFCB will change to a flashing purple. Click the "Sync project to device" icon and wait for the files to copy to the MFCB.
 9. Disconnect the MFCB from your computer and reinstall it in the receiver board.
 10. Turn the model on and wait ~10 seconds for WiFi connection.
