@@ -29,6 +29,14 @@ train_reverse = [False, False, False, False]
 update_speed = 1
 max_random_delta = 100
 volcano_mode = 'off'
+volcano_color: int = 0x000000
+
+FIRE_EFFECT_COLOR = 0xf0f000
+FIRE_EFFECT_COOLING = 12
+FIRE_EFFECT_SPARKING = 32
+FIRE_EFFECT_SECONDS = 0.05
+FIRE_EFFECT_SPARK_MAX = 0.75
+FIRE_EFFECT_SPARK_MIN = 0.35
 
 from bbl.leds import LEDController
 from bbl.motors import MotorsController
@@ -204,6 +212,7 @@ button {{
                     <option value="off" {'selected ' if volcano_mode is 'off' else ''}>Off</option>
                     <option value="solid" {'selected ' if volcano_mode is 'solid' else ''}>Solid</option>
                     <option value="breathing" {'selected ' if volcano_mode is 'breathing' else ''}>Breathing</option>
+                    <option value="erupting" {'selected ' if volcano_mode is 'erupting' else ''}>Erupting</option>
                 </select>
             </p>
             <p>
@@ -300,9 +309,25 @@ button {{
                 await uasyncio.sleep(1)
 
     async def led_task():
+        global volcano_color
+
         while True:
+            if volcano_mode is 'erupting':
+                # cool down first
+                volcano_color = volcano_color + int((FIRE_EFFECT_COOLING / 100) * FIRE_EFFECT_COLOR * -1)
+
+                # if sparking, then heat up
+                if random() > (FIRE_EFFECT_SPARKING / 100):
+                    spark_amount = min(FIRE_EFFECT_SPARK_MAX, random() + FIRE_EFFECT_SPARK_MIN)
+                    volcano_color = volcano_color + int(spark_amount * FIRE_EFFECT_COLOR)
+
+                # clamp color from black to white
+                volcano_color = min(FIRE_EFFECT_COLOR, max(0x000000, volcano_color))
+
+                leds.set_led_effect(0, FIRE_EFFECT_SECONDS * 1000, 1, 1, volcano_color)
+
             leds.timing_proc()
-            await uasyncio.sleep(0.05)
+            await uasyncio.sleep(FIRE_EFFECT_SECONDS if volcano_mode is 'erupting' else 0.02)
 
     # start HTTP server
     http_task = uasyncio.create_task(http_server.start_server(port=80))
