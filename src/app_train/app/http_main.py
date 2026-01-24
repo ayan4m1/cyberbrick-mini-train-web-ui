@@ -242,11 +242,7 @@ button {{
         new_volcano_mode = request.form.get('volcanoMode')
 
         for i in range(4):
-            train_speeds[i] = int(new_speeds[i])
-
-            if train_speeds[i] < -100 or train_speeds[i] > 100:
-                return f'Invalid speed for train {i + 1}'
-
+            train_speeds[i] = min(SPEED_MAX, max(SPEED_MIN, int(new_speeds[i])))
             train_random_speed[i] = True if str(i + 1) in new_randoms else False
             train_reverse[i] = True if str(i + 1) in new_reverses else False
 
