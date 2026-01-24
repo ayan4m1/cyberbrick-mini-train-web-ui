@@ -6,7 +6,6 @@
 # Portions Copyright (c) 2025 MakerWorld
 #
 
-import sys
 import machine
 import uasyncio
 import time
@@ -14,12 +13,14 @@ import ujson
 import ulogger
 from gc import collect as garbage_collect
 from random import random
+from sys import path
 
-sys.path.append("/app")
-sys.path.append("/bbl")
-if '.frozen' in sys.path:
-    sys.path.remove('.frozen')
-    sys.path.append('.frozen')
+path.append("/app")
+path.append("/bbl")
+if '.frozen' in path:
+    path.remove('.frozen')
+    path.append('.frozen')
+
 
 wifi_ssid = 'qux'        # WiFi station ID
 wifi_psk = 'changeme'    # WiFi pre-shared key
