@@ -31,12 +31,14 @@ max_random_delta = 100
 volcano_mode = 'off'
 volcano_color: int = 0x000000
 
+BREATHING_EFFECT_SECONDS = 0.02
 FIRE_EFFECT_COLOR = 0xf0f000
-FIRE_EFFECT_COOLING = 12
+FIRE_EFFECT_COOLING = 18
 FIRE_EFFECT_SPARKING = 32
 FIRE_EFFECT_SECONDS = 0.05
 FIRE_EFFECT_SPARK_MAX = 0.75
 FIRE_EFFECT_SPARK_MIN = 0.35
+OTHER_EFFECT_SECONDS = 0.5
 
 from bbl.leds import LEDController
 from bbl.motors import MotorsController
@@ -56,9 +58,9 @@ class Clock(ulogger.BaseClock):
 
 def update_volcano_mode():
     if volcano_mode is 'breathing':
-        leds.set_led_effect(2, 1000, 255, 1, 0xf0f000)
+        leds.set_led_effect(2, 1000, 255, 1, FIRE_EFFECT_COLOR)
     elif volcano_mode is 'solid':
-        leds.set_led_effect(0, 1000, 255, 1, 0xf0f000)
+        leds.set_led_effect(0, 1000, 255, 1, FIRE_EFFECT_COLOR)
     else:
         leds.set_led_effect(0, 0, 0, 1, 0)
 
@@ -322,12 +324,19 @@ button {{
                     volcano_color = volcano_color + int(spark_amount * FIRE_EFFECT_COLOR)
 
                 # clamp color from pure fire color to white
-                volcano_color = min(FIRE_EFFECT_COLOR, max(0x000000, volcano_color))
+                volcano_color = min(FIRE_EFFECT_COLOR, max(0, volcano_color))
 
                 leds.set_led_effect(0, FIRE_EFFECT_SECONDS * 1000, 1, 1, volcano_color)
 
             leds.timing_proc()
-            await uasyncio.sleep(FIRE_EFFECT_SECONDS if volcano_mode is 'erupting' else 0.02)
+
+            # run LED task as often as needed by selected effect
+            if volcano_mode is 'erupting':
+                await uasyncio.sleep(FIRE_EFFECT_SECONDS)
+            elif volcano_mode is 'breathing':
+                await uasyncio.sleep(BREATHING_EFFECT_SECONDS)
+            else:
+                await uasyncio.sleep(OTHER_EFFECT_SECONDS)
 
     # start HTTP server
     http_task = uasyncio.create_task(http_server.start_server(port=80))
