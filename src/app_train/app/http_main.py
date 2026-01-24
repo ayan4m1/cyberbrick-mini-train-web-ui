@@ -7,10 +7,10 @@
 #
 
 import machine
-import uasyncio
 import time
 import ujson
 import ulogger
+import uasyncio
 from gc import collect as garbage_collect
 from random import random
 from sys import path
