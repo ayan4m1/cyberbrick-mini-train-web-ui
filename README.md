@@ -1,6 +1,8 @@
 # CyberBrick Mini Train custom application
 
-This software, when flashed to a CyberBrick Multi-Function Core Board, will convert it into a custom web server for the [CyberBrick Motor Box for Mini Train](https://makerworld.com/en/models/1886257-cyberbrick-motor-box-for-mini-train-diorama). You can control the model from any device with a web browser without the need for a CyberBrick remote transmitter. Configuration is saved to flash and loaded on startup, so your setting persist between boots.
+This software, when flashed to a CyberBrick Multi-Function Core Board, will convert it into a custom web server for the [CyberBrick Motor Box for Mini Train](https://makerworld.com/en/models/1886257-cyberbrick-motor-box-for-mini-train-diorama).
+
+You can control all aspects of the model from any device with a web browser without the need for a CyberBrick remote transmitter. Configuration is saved to flash and loaded on startup, so your settings persist between boots.
 
 ## Screenshot
 
@@ -19,7 +21,7 @@ This software, when flashed to a CyberBrick Multi-Function Core Board, will conv
 9. Disconnect the MFCB from your computer and reinstall it in the receiver board.
 10. Turn the model on and wait ~10 seconds for WiFi connection.
 11. Once you see the device on the network (its hostname will start with `mpy-` and end with `esp32c3`), you can access it over HTTP at its IP address.
-12. Use the provided web page to control the train speeds.
+12. Use the provided web page to control the train speeds, direction, update speed, and volcano LED.
 
 ## Uninstallation
 
