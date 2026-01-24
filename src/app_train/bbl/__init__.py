@@ -8,11 +8,7 @@
 from .leds import LEDController
 from .servos import ServosController
 from .motors import MotorsController
-from .executor import CommandExecutor
-from .sleepModule import SleepModule
 
 __all__ = ["LEDController",
            "ServosController",
-           "MotorsController",
-           "CommandExecutor",
-           "SleepModule"]
+           "MotorsController"]
