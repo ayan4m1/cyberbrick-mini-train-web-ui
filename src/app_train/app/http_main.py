@@ -321,7 +321,7 @@ button {{
                     spark_amount = min(FIRE_EFFECT_SPARK_MAX, random() + FIRE_EFFECT_SPARK_MIN)
                     volcano_color = volcano_color + int(spark_amount * FIRE_EFFECT_COLOR)
 
-                # clamp color from black to white
+                # clamp color from pure fire color to white
                 volcano_color = min(FIRE_EFFECT_COLOR, max(0x000000, volcano_color))
 
                 leds.set_led_effect(0, FIRE_EFFECT_SECONDS * 1000, 1, 1, volcano_color)
