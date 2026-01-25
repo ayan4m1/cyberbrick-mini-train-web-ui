@@ -187,31 +187,31 @@ button {{
         <h1>Motor Box for Mini Train Control</h1>
         <form action="/control" method="POST">
             <p>
-                Train 1 @ <input type="number" min="{SPEED_MIN}" max="{SPEED_MAX}" step="5" name="speeds[]" value="{train_speeds[0]}" id="speed1" {'readonly' if train_random_speed[0] else ''} />%
+                Train 1 @ <input type="number" min="{SPEED_MIN}" max="{SPEED_MAX}" step="5" name="speeds[]" value="{train_speeds[0]}" id="speed1" {'readonly ' if train_random_speed[0] else ''}/>%
                 <input type="checkbox" name="randomize[]" value="1" id="randomize1" {'checked ' if train_random_speed[0] else ''}/>
                 <label for="randomize1">Randomize</label>
-                <input type="checkbox" name="reverse[]" value="1" id="reverse1" {'checked' if train_reverse[0] else ''} {'' if train_random_speed[0] else 'disabled'} />
+                <input type="checkbox" name="reverse[]" value="1" id="reverse1" {'checked' if train_reverse[0] else ''} {'' if train_random_speed[0] else 'disabled '}/>
                 <label for="reverse1">Reverse</label>
             </p>
             <p>
-                Train 2 @ <input type="number" min="{SPEED_MIN}" max="{SPEED_MAX}" step="5" name="speeds[]" value="{train_speeds[1]}" id="speed2" {'readonly' if train_random_speed[1] else ''} />%
+                Train 2 @ <input type="number" min="{SPEED_MIN}" max="{SPEED_MAX}" step="5" name="speeds[]" value="{train_speeds[1]}" id="speed2" {'readonly ' if train_random_speed[1] else ''}/>%
                 <input type="checkbox" name="randomize[]" value="2" id="randomize2" {'checked ' if train_random_speed[1] else ''}/>
                 <label for="randomize2">Randomize</label>
-                <input type="checkbox" name="reverse[]" value="2" id="reverse2" {'checked' if train_reverse[1] else ''} {'' if train_random_speed[1] else 'disabled'} />
+                <input type="checkbox" name="reverse[]" value="2" id="reverse2" {'checked' if train_reverse[1] else ''} {'' if train_random_speed[1] else 'disabled '}/>
                 <label for="reverse2">Reverse</label>
             </p>
             <p>
-                Train 3 @ <input type="number" min="{SPEED_MIN}" max="{SPEED_MAX}" step="5" name="speeds[]" value="{train_speeds[2]}" id="speed3" {'readonly' if train_random_speed[2] else ''} />%
+                Train 3 @ <input type="number" min="{SPEED_MIN}" max="{SPEED_MAX}" step="5" name="speeds[]" value="{train_speeds[2]}" id="speed3" {'readonly ' if train_random_speed[2] else ''}/>%
                 <input type="checkbox" name="randomize[]" value="3" id="randomize3" {'checked ' if train_random_speed[2] else ''}/>
                 <label for="randomize3">Randomize</label>
-                <input type="checkbox" name="reverse[]" value="3" id="reverse3" {'checked' if train_reverse[2] else ''} {'' if train_random_speed[2] else 'disabled'} />
+                <input type="checkbox" name="reverse[]" value="3" id="reverse3" {'checked' if train_reverse[2] else ''} {'' if train_random_speed[2] else 'disabled '}/>
                 <label for="reverse3">Reverse</label>
             </p>
             <p>
-                Train 4 @ <input type="number" min="{SPEED_MIN}" max="{SPEED_MAX}" step="5" name="speeds[]" value="{train_speeds[3]}" id="speed4" {'readonly' if train_random_speed[3] else ''} />%
+                Train 4 @ <input type="number" min="{SPEED_MIN}" max="{SPEED_MAX}" step="5" name="speeds[]" value="{train_speeds[3]}" id="speed4" {'readonly ' if train_random_speed[3] else ''}/>%
                 <input type="checkbox" name="randomize[]" value="4" id="randomize4" {'checked ' if train_random_speed[3] else ''}/>
                 <label for="randomize4">Randomize</label>
-                <input type="checkbox" name="reverse[]" value="4" id="reverse4" {'checked' if train_reverse[3] else ''} {'' if train_random_speed[3] else 'disabled'} />
+                <input type="checkbox" name="reverse[]" value="4" id="reverse4" {'checked' if train_reverse[3] else ''} {'' if train_random_speed[3] else 'disabled '}/>
                 <label for="reverse4">Reverse</label>
             </p>
             <p>
