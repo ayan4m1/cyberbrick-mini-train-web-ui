@@ -331,6 +331,7 @@ button {{
 
                 leds.set_led_effect(0, FIRE_EFFECT_SECONDS * 1000, 1, 1, volcano_color)
 
+            # call periodic update function for LED controller
             leds.timing_proc()
 
             # run LED task as often as needed by selected effect
@@ -342,7 +343,7 @@ button {{
                 await uasyncio.sleep(OTHER_EFFECT_SECONDS)
 
     # start HTTP server
-    http_task = uasyncio.create_task(http_server.start_server(port=80))
+    http_task = uasyncio.create_task(http_server.start_server(port=HTTP_PORT))
 
     # run HTTP server and update task in parallel
     await uasyncio.gather(http_task, update_task(), led_task())
