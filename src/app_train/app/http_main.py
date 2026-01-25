@@ -33,31 +33,32 @@ leds = LEDController("LED1")
 
 wifi_ssid = 'qux'        # WiFi station ID
 wifi_psk = 'changeme'    # WiFi pre-shared key
-train_speeds = [0, 0, 0, 0]
+
+max_random_delta: int = 100
 train_random_speed: list[bool] = [False, False, False, False]
 train_reverse: list[bool] = [False, False, False, False]
+train_speeds = [0, 0, 0, 0]
 update_speed: float = 1
-max_random_delta: int = 100
-volcano_mode: str = 'off'
 volcano_color: int = 0x000000
+volcano_mode: str = 'off'
 
-BREATHING_EFFECT_SECONDS = 0.02
 BLACK_COLOR = 0x000000
+BREATHING_EFFECT_SECONDS = 0.02
 FIRE_EFFECT_COLOR = 0xf0f000
 FIRE_EFFECT_COOLING = 18
-FIRE_EFFECT_SPARKING = 32
 FIRE_EFFECT_SECONDS = 0.05
 FIRE_EFFECT_SPARK_MAX = 0.75
 FIRE_EFFECT_SPARK_MIN = 0.35
-OTHER_EFFECT_SECONDS = 0.5
-SPEED_MIN = -100
-SPEED_MAX = 100
-
+FIRE_EFFECT_SPARKING = 32
+HTTP_PORT = 80
 LED_BITMASK = 0b0001
 LED_EFFECT_BREATHE = 2
-LED_EFFECT_SOLID = 0
 LED_EFFECT_DURATION = 1000
 LED_EFFECT_REPEAT = 255
+LED_EFFECT_SOLID = 0
+OTHER_EFFECT_SECONDS = 0.5
+SPEED_MAX = 100
+SPEED_MIN = -100
 
 class Clock(ulogger.BaseClock):
     def __init__(self):
