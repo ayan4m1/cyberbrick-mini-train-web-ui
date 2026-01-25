@@ -292,7 +292,7 @@ button {{
                             train_speeds[i] = train_speeds[i] * -1
                         train_speeds[i] = train_speeds[i] - train_speeds[i] % 5
                     # perform clamping on speed values
-                    train_speeds[i] = min(100, max(-100, train_speeds[i]))
+                    train_speeds[i] = min(SPEED_MAX, max(SPEED_MIN, train_speeds[i]))
 
                 # set motor and servo speeds
                 motors.set_speed(1, round((train_speeds[0] / 1e2) * 2048))
