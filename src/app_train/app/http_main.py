@@ -42,6 +42,7 @@ volcano_mode: str = 'off'
 volcano_color: int = 0x000000
 
 BREATHING_EFFECT_SECONDS = 0.02
+BLACK_COLOR = 0x000000
 FIRE_EFFECT_COLOR = 0xf0f000
 FIRE_EFFECT_COOLING = 18
 FIRE_EFFECT_SPARKING = 32
@@ -52,6 +53,12 @@ OTHER_EFFECT_SECONDS = 0.5
 SPEED_MIN = -100
 SPEED_MAX = 100
 
+LED_BITMASK = 0b0001
+LED_EFFECT_BREATHE = 2
+LED_EFFECT_SOLID = 0
+LED_EFFECT_DURATION = 1000
+LED_EFFECT_REPEAT = 255
+
 class Clock(ulogger.BaseClock):
     def __init__(self):
         self.start = time.time()
@@ -61,12 +68,9 @@ class Clock(ulogger.BaseClock):
         return '%d' % (inv)
 
 def update_volcano_mode():
-    if volcano_mode is 'breathing':
-        leds.set_led_effect(2, 1000, 255, 1, FIRE_EFFECT_COLOR)
-    elif volcano_mode is 'solid':
-        leds.set_led_effect(0, 1000, 255, 1, FIRE_EFFECT_COLOR)
-    else:
-        leds.set_led_effect(0, 0, 0, 1, 0)
+    effect = LED_EFFECT_BREATHE if volcano_mode is 'breathing' else LED_EFFECT_SOLID
+    color = FIRE_EFFECT_COLOR if volcano_mode in ['breathing', 'solid'] else BLACK_COLOR
+    leds.set_led_effect(effect, LED_EFFECT_DURATION, LED_EFFECT_REPEAT, LED_BITMASK, color)
 
 async def main():
     global train_speeds, train_random_speed, train_reverse, update_speed, max_random_delta, volcano_mode
