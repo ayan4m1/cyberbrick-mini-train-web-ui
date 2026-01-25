@@ -76,7 +76,7 @@ async def main():
     global train_speeds, train_random_speed, train_reverse, update_speed, max_random_delta, volcano_mode
 
     # get restart cause and initialize logging
-    rst_c = machine.reset_cause()
+    reset_cause = machine.reset_cause()
     log_clock = Clock()
     log_handler_to_term = ulogger.Handler(
         level=ulogger.INFO,
@@ -95,7 +95,7 @@ async def main():
         max_file_size=10240
     )
     logger = ulogger.Logger(name=__name__, handlers=(log_handler_to_term, log_handler_to_file))
-    rc2str = {
+    reset_cause_map = {
         getattr(machine, i): i
         for i in ('PWRON_RESET',
                   'HARD_RESET',
@@ -103,12 +103,14 @@ async def main():
                   'DEEPSLEEP_RESET',
                   'SOFT_RESET')
     }
-    reset_cause = rc2str.get(rst_c, str(rst_c))
+    reset_cause_string = reset_cause_map.get(reset_cause, str(reset_cause))
+    del reset_cause_map
+    garbage_collect()
 
     # log restart cause
-    logger.info(f'[MAIN]{reset_cause}')
-    del rc2str
+    logger.info(f'[MAIN]{reset_cause_string}')
 
+    # load config if one exists
     try:
         with open('train_config', 'r') as f:
             config = ujson.load(f)
