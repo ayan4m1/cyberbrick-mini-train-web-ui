@@ -14,20 +14,18 @@ You can control all aspects of the model from any device with a web browser with
 2. In VS Code, install the [Pymakr extension](https://marketplace.visualstudio.com/items?itemName=pycom.Pymakr).
 3. In VS Code, open the `src/app_train` folder.
 4. Remove the Multi-Function Core Board from the model and connect it to your computer. You should see a green LED assuming the RC application has been flashed.
-5. Add the device to the project in the Pymakr tab (quotation mark icon).
-6. Set your WiFi credentials in http_main.py. **NOTE**: The ESP32 only supports 2.4Ghz networks.
-7. Open a terminal in VS Code and run `./build.sh` (if Bash), `build.bat` if cmd, or `.\build.bat` if PowerShell.
-8. In the Pymakr tab, connect to your device and use the "Stop script" action from the "..." menu. The green LED on the MFCB will change to a flashing purple. Click the "Sync project to device" icon and wait for the files to copy to the MFCB.
-
-![the pymakr tab in vs code](./docs/pymakr-tab.png)
-![the pymakr connect icon](./docs/pymakr-connect.png)
-![the pymakr stop script menu](./docs/pymakr-stop-script.png)
-![the pymakr sync project icon](./docs/pymakr-sync.png)
-
-1. Disconnect the MFCB from your computer and reinstall it in the receiver board.
-2. Turn the model on and wait ~10 seconds for WiFi connection.
-3. Once you see the device on the network (its hostname will start with `mpy-` and end with `esp32c3`), you can access it over HTTP at its IP address.
-4. Use the provided web page to control the train speeds, direction, update speed, and volcano LED.
+5. Set your WiFi credentials in http_main.py. **NOTE**: The ESP32 only supports 2.4Ghz networks.
+6. Open a terminal in VS Code and run `./build.sh` (if Bash), `build.bat` if cmd, or `.\build.bat` if PowerShell.
+   `8. In the Pymakr tab, connect to your device and use the "Stop script" action from the "..." menu. The green LED on the MFCB will change to a flashing purple. Click the "Sync project to device" icon and wait for the files to copy to the MFCB.`
+7. Go to the Pymakr tab in VS Code. ![the pymakr tab in vs code](./docs/pymakr-tab.png)
+8. Add your MFCB device to the project.
+9. Click the Connect Device icon. ![the pymakr connect icon](./docs/pymakr-connect.png)
+10. Click the "..." menu and select "Stop script." ![the pymakr stop script menu](./docs/pymakr-stop-script.png)
+11. Click the "Sync project to device" icon and wait for the files to copy. ![the pymakr sync project icon](./docs/pymakr-sync.png)
+12. Disconnect the MFCB from your computer and reinstall it in the receiver board.
+13. Turn the model on and wait ~10 seconds for WiFi connection.
+14. Once you see the device on the network (its hostname will start with `mpy-` and end with `esp32c3`), you can access it over HTTP at its IP address.
+15. Use the provided web page to control the train speeds, direction, update speed, and volcano LED.
 
 ## Uninstallation
 
