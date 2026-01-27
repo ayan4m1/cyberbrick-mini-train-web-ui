@@ -12,7 +12,7 @@ import ujson
 import ulogger
 import uasyncio
 from gc import collect as garbage_collect
-from network import WLAN, STA_IF
+from network import WLAN, STA_IF, hostname
 from random import random
 from sys import path
 
@@ -132,6 +132,7 @@ async def main():
         logger.warn(f"[CFG_LOAD]{e}.")
 
     # connect to WiFi
+    hostname(wifi_hostname)
     wlan = WLAN(STA_IF)
     wlan.active(True)
     while not wlan.isconnected():
