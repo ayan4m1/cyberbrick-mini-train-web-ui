@@ -6,6 +6,14 @@
 # Portions Copyright (c) 2025 MakerWorld
 #
 
+### CONFIGURE WIFI HERE
+
+WIFI_SSID = 'qux'          # WiFi station ID
+WIFI_PSK = 'changeme'      # WiFi pre-shared key
+WIFI_HOSTNAME = 'motorbox' # Hostname (UI be available at http://motorbox.local)
+
+### END CONFIGURATION
+
 import machine
 import time
 import ujson
@@ -30,10 +38,6 @@ from bbl.servos import ServosController
 motors = MotorsController()
 servos = ServosController()
 leds = LEDController("LED1")
-
-wifi_ssid = 'qux'          # WiFi station ID
-wifi_psk = 'changeme'      # WiFi pre-shared key
-wifi_hostname = 'motorbox' # Hostname (UI be available at http://motorbox.local)
 
 max_random_delta: int = 100
 train_random_speed: list[bool] = [False, False, False, False]
@@ -132,12 +136,12 @@ async def main():
         logger.warn(f"[CFG_LOAD]{e}.")
 
     # connect to WiFi
-    hostname(wifi_hostname)
+    hostname(WIFI_HOSTNAME)
     wlan = WLAN(STA_IF)
     wlan.active(True)
     while not wlan.isconnected():
-        logger.info(f'[WIFI]Connect to {wifi_ssid}...')
-        wlan.connect(wifi_ssid, wifi_psk)
+        logger.info(f'[WIFI]Connect to {WIFI_SSID}...')
+        wlan.connect(WIFI_SSID, WIFI_PSK)
         await uasyncio.sleep(5)
     logger.info("[WIFI]Connected!")
 
