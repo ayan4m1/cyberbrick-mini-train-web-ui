@@ -31,8 +31,9 @@ motors = MotorsController()
 servos = ServosController()
 leds = LEDController("LED1")
 
-wifi_ssid = 'qux'        # WiFi station ID
-wifi_psk = 'changeme'    # WiFi pre-shared key
+wifi_ssid = 'qux'          # WiFi station ID
+wifi_psk = 'changeme'      # WiFi pre-shared key
+wifi_hostname = 'motorbox' # Hostname (UI be available at http://motorbox.local)
 
 max_random_delta: int = 100
 train_random_speed: list[bool] = [False, False, False, False]

@@ -17,31 +17,32 @@ You can control all aspects of the model from any device with a web browser with
 3. In VS Code, open the `src/app_train` folder.
 4. Remove the Multi-Function Core Board from the model and connect it to your computer. You should see a green LED assuming the RC application has been flashed.
 5. Set your WiFi credentials in http_main.py. **NOTE**: The ESP32 only supports 2.4Ghz networks.
-6. Open a terminal in VS Code and run `./build.sh` (if Bash), `build.bat` if cmd, or `.\build.bat` if PowerShell.
-7. Click on the Pymakr tab in VS Code.
+6. If you want to have multiple units on a single network, set the hostname to a unique value.
+7. Open a terminal in VS Code and run `./build.sh` (if Bash), `build.bat` if cmd, or `.\build.bat` if PowerShell.
+8. Click on the Pymakr tab in VS Code.
 
 ![the pymakr tab in vs code](./docs/pymakr-tab.png)
 
-8. Click "Add Devices," then check the box for USB Serial Device and click OK.
+9. Click "Add Devices," then check the box for USB Serial Device and click OK.
 
 ![the "add devices" button](./docs/pymakr-add-device.png)
 
-9. Click the Connect Device icon.
+10. Click the Connect Device icon.
 
 ![the pymakr connect icon](./docs/pymakr-connect.png)
 
-10. If the MFCB LED is solid green, click the "..." menu and select "Stop script."
+11. If the MFCB LED is solid green, click the "..." menu and select "Stop script."
 
 ![the pymakr stop script menu](./docs/pymakr-stop-script.png)
 
-11. The MFCB LED should be flashing purple now. Click the "Sync project to device" icon and wait for the files to copy.
+12. The MFCB LED should be flashing purple now. Click the "Sync project to device" icon and wait for the files to copy.
 
 ![the pymakr sync project icon](./docs/pymakr-sync.png)
 
-12. Disconnect the MFCB from your computer and reinstall it in the receiver board.
-13. Turn the model on and wait ~10 seconds for WiFi connection.
-14. Once you see the device on the network (its hostname will start with `mpy-` and end with `esp32c3`), you can access it over HTTP at its IP address.
-15. Use the provided web page to control the train speeds, direction, update speed, and volcano LED.
+13. Disconnect the MFCB from your computer and reinstall it in the receiver board.
+14. Turn the model on and wait ~10 seconds for WiFi connection.
+15. Once you see the device on the network, you can access it over HTTP at its IP address or at [http://motorbox.local/](http://motorbox.local/). If you customized the hostname in step 6, use that instead of `motorbox`.
+16. Use the provided web page to control the train speeds, direction, update speed, and volcano LED.
 
 ## Uninstallation
 
