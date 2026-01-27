@@ -10,7 +10,7 @@
 
 WIFI_SSID = 'qux'          # WiFi station ID
 WIFI_PSK = 'changeme'      # WiFi pre-shared key
-WIFI_HOSTNAME = 'motorbox' # Hostname (UI be available at http://motorbox.local)
+WIFI_HOSTNAME = 'motorbox' # Hostname (UI will be available at http://motorbox.local)
 
 ### END CONFIGURATION
 
