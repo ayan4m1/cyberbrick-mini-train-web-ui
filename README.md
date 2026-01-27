@@ -10,22 +10,34 @@ You can control all aspects of the model from any device with a web browser with
 
 ## Installation
 
+<!-- markdownlint-disable MD029 -->
+
 1. Install [Visual Studio Code](https://code.visualstudio.com/), [Node.js](https://nodejs.org/en/download/lts), and [Git for Windows](https://git-scm.com/install/windows).
 2. In VS Code, install the [Pymakr extension](https://marketplace.visualstudio.com/items?itemName=pycom.Pymakr).
 3. In VS Code, open the `src/app_train` folder.
 4. Remove the Multi-Function Core Board from the model and connect it to your computer. You should see a green LED assuming the RC application has been flashed.
 5. Set your WiFi credentials in http_main.py. **NOTE**: The ESP32 only supports 2.4Ghz networks.
 6. Open a terminal in VS Code and run `./build.sh` (if Bash), `build.bat` if cmd, or `.\build.bat` if PowerShell.
-   `8. In the Pymakr tab, connect to your device and use the "Stop script" action from the "..." menu. The green LED on the MFCB will change to a flashing purple. Click the "Sync project to device" icon and wait for the files to copy to the MFCB.`
-7. Go to the Pymakr tab in VS Code.
-   ![the pymakr tab in vs code](./docs/pymakr-tab.png)
-8. Add your MFCB device to the project.
+7. Click on the Pymakr tab in VS Code.
+
+![the pymakr tab in vs code](./docs/pymakr-tab.png)
+
+8. Click "Add Devices," then check the box for USB Serial Device and click OK.
+
+![the "add devices" button](./docs/pymakr-add-device.png)
+
 9. Click the Connect Device icon.
-   ![the pymakr connect icon](./docs/pymakr-connect.png)
-10. Click the "..." menu and select "Stop script."
-    ![the pymakr stop script menu](./docs/pymakr-stop-script.png)
-11. Click the "Sync project to device" icon and wait for the files to copy.
-    ![the pymakr sync project icon](./docs/pymakr-sync.png)
+
+![the pymakr connect icon](./docs/pymakr-connect.png)
+
+10. If the MFCB LED is solid green, click the "..." menu and select "Stop script."
+
+![the pymakr stop script menu](./docs/pymakr-stop-script.png)
+
+11. The MFCB LED should be flashing purple now. Click the "Sync project to device" icon and wait for the files to copy.
+
+![the pymakr sync project icon](./docs/pymakr-sync.png)
+
 12. Disconnect the MFCB from your computer and reinstall it in the receiver board.
 13. Turn the model on and wait ~10 seconds for WiFi connection.
 14. Once you see the device on the network (its hostname will start with `mpy-` and end with `esp32c3`), you can access it over HTTP at its IP address.
